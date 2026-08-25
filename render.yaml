@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: diabetes-risk-app
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    envVars:
+      - key: FLASK_SECRET
+        generateValue: true
+      - key: PYTHON_VERSION
+        value: 3.12.0

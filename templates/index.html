@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <div class="hero-copy">
+    <p class="eyebrow">Clinical intelligence platform</p>
+    <h1>Diabetes risk assessment designed for modern care teams.</h1>
+    <p class="subtitle">
+      Transform screening into a guided, evidence-based workflow with fast triage, deeper review, and actionable patient recommendations.
+    </p>
+
+    <div class="cta-row">
+      <a class="button primary" href="{{ url_for('assessment') }}">Start assessment</a>
+      <a class="button secondary" href="{{ url_for('assessment') }}">Full clinical review</a>
+    </div>
+
+    <div class="trust-row">
+      <span><i class="fas fa-shield-halved"></i> Secure workflow</span>
+      <span><i class="fas fa-clock"></i> 2-minute triage</span>
+      <span><i class="fas fa-file-lines"></i> PDF-ready results</span>
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <div class="dashboard-panel">
+      <div class="panel-top">
+        <span class="chip success">Ready</span>
+        <span class="chip neutral">No patient data</span>
+      </div>
+
+      <div class="score-block">
+        <div class="score-value">--</div>
+        <div class="score-label">Awaiting assessment</div>
+      </div>
+
+      <div class="mini-grid">
+        <div class="mini-stat">
+          <span class="mini-label">BMI</span>
+          <strong>—</strong>
+        </div>
+        <div class="mini-stat">
+          <span class="mini-label">Glucose</span>
+          <strong>—</strong>
+        </div>
+      </div>
+
+      <div class="trend-bar">
+        <span>Clinical outlook</span>
+        <strong>Pending review</strong>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="stat-grid">
+  <div class="card stat-card">
+    <div class="stat-icon"><i class="fas fa-bolt"></i></div>
+    <h3>Quick prediction</h3>
+    <p>Fast screening using key indicators such as BMI, glucose, and age.</p>
+  </div>
+  <div class="card stat-card">
+    <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+    <h3>Full assessment</h3>
+    <p>Use additional clinical and lifestyle variables for deeper evaluation.</p>
+  </div>
+  <div class="card stat-card">
+    <div class="stat-icon"><i class="fas fa-brain"></i></div>
+    <h3>Clinical insight</h3>
+    <p>Review patient drivers, risk modifiers, and structured recommendations.</p>
+  </div>
+</section>
+
+<section class="card info-section">
+  <div class="section-heading narrow">
+    <div>
+      <p class="eyebrow">Why this workflow</p>
+      <h2>Built like a clinical decision-support dashboard.</h2>
+    </div>
+  </div>
+
+  <div class="feature-grid">
+    <div>
+      <h3>Clinical accuracy</h3>
+      <p class="form-description">This platform uses local scikit-learn models with a secure fallback heuristic for continuity when model files are unavailable.</p>
+    </div>
+    <div>
+      <h3>Privacy-first</h3>
+      <p class="form-description">Patient data remains in the browser session while the assessment is being processed, helping keep the workflow simple and compliant by design.</p>
+    </div>
+    <div>
+      <h3>Patient-ready output</h3>
+      <p class="form-description">Each assessment can deliver a human-readable summary, evidence-based recommendations, and PDF export for follow-up care.</p>
+    </div>
+  </div>
+</section>
+
+<section class="card info-section">
+  <div class="section-heading narrow">
+    <div>
+      <p class="eyebrow">How it works</p>
+      <h2>Simple, guided, and action-focused.</h2>
+    </div>
+  </div>
+
+  <div class="steps-grid">
+    <div class="step-box">
+      <div class="feature-icon small"><i class="fas fa-clipboard-list"></i></div>
+      <h3>1. Enter data</h3>
+      <p>Capture key clinical and lifestyle factors with a clean, guided form.</p>
+    </div>
+    <div class="step-box">
+      <div class="feature-icon small"><i class="fas fa-microscope"></i></div>
+      <h3>2. AI analysis</h3>
+      <p>The chosen model calculates risk and highlights important clinical modifiers.</p>
+    </div>
+    <div class="step-box">
+      <div class="feature-icon small"><i class="fas fa-file-medical"></i></div>
+      <h3>3. Review report</h3>
+      <p>Get a structured summary and recommendations that can be exported as PDF.</p>
+    </div>
+  </div>
+</section>
+
+<section class="card info-section accent-section">
+  <div class="section-heading narrow">
+    <div>
+      <p class="eyebrow">Ready for use</p>
+      <h2>Medical-grade clarity without the clutter.</h2>
+    </div>
+  </div>
+
+  <div class="cta-row center-row">
+    <a class="button primary" href="{{ url_for('assessment') }}">Start assessment</a>
+  </div>
+</section>
+{% endblock %}

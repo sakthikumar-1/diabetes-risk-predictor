@@ -1,0 +1,262 @@
+{% extends "base.html" %}
+
+{% block title %}Assessment Studio{% endblock %}
+
+{% block content %}
+<section class="assessment-studio">
+  <div class="studio-card card">
+    <div class="studio-header">
+      <div>
+        <p class="eyebrow">Assessment studio</p>
+        <h2>Clinical overview</h2>
+      </div>
+      <div class="studio-toggle" aria-label="Assessment mode selector">
+        <a class="mode-button" href="{{ url_for('quick') }}">Quick</a>
+        <a class="mode-button active" href="{{ url_for('full') }}">Full</a>
+      </div>
+    </div>
+
+    <p class="studio-intro">Use a quick assessment for a fast risk check, or switch to full mode for a deeper clinical review.</p>
+
+    <div class="studio-layout">
+      <form method="post" action="{{ url_for('predict') }}" class="prediction-form studio-form" id="fullForm">
+        <input type="hidden" name="mode" value="full" />
+        <input type="hidden" name="lifestyle_expanded" value="1" />
+
+        <div class="field-group">
+          <div class="section-subtitle">Patient details</div>
+          <div class="field-grid two-col">
+            <label>Full name <input type="text" name="name" placeholder="e.g., Jane Doe" required /></label>
+            <label>Email (optional) <input type="email" name="email" placeholder="you@example.com" /></label>
+            <label>Age <input type="number" name="age" min="1" max="120" placeholder="e.g., 45" required /></label>
+            <label>Gender
+              <select name="gender" required>
+                <option value="">Select</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
+            </label>
+            <label>Family history of diabetes
+              <select name="family_history">
+                <option value="No">No</option>
+                <option value="Yes">Yes</option>
+              </select>
+            </label>
+            <label>Which relative?
+              <select name="family_member">
+                <option value="Parent">Parent</option>
+                <option value="Sibling">Sibling</option>
+                <option value="Child">Child</option>
+              </select>
+            </label>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <div class="section-subtitle">Clinical measurements</div>
+          <div class="field-grid two-col">
+            <label>Pregnancies <input type="number" name="pregnancies" min="0" max="20" value="0" /></label>
+            <label>Glucose (mg/dL) <input type="number" name="glucose" min="0" max="500" step="0.1" placeholder="e.g., 90" required /></label>
+            <label>Blood pressure (mmHg) <input type="number" name="blood_pressure" min="50" max="250" value="120" /></label>
+            <label>Skin thickness (mm) <input type="number" name="skin_thickness" min="0" max="100" value="0" /></label>
+            <label>Insulin (mu U/mL) <input type="number" name="insulin" min="0" max="1000" value="0" /></label>
+            <label>BMI <input type="number" name="bmi" min="10" max="50" step="0.1" placeholder="e.g., 24.5" /></label>
+            <label>Diabetes pedigree function <input type="number" name="dpf" step="0.01" min="0" max="2.5" value="0.5" /></label>
+            <div class="empty-cell"></div>
+          </div>
+        </div>
+
+        <div class="field-group lifestyle-field-group">
+          <div class="lifestyle-toggle-row">
+            <div class="section-subtitle">Lifestyle information</div>
+            <span class="muted">Optional — expand to provide activity, diet, sleep and other lifestyle details</span>
+          </div>
+          <div class="field-grid two-col compact-grid">
+            <label>History of gestational diabetes
+              <select name="gestational">
+                <option value="No">No</option>
+                <option value="Yes">Yes</option>
+              </select>
+            </label>
+            <label>Physical activity (minutes/week) <input type="number" name="activity" min="0" max="10000" placeholder="e.g., 150" /></label>
+            <label>Diet quality (1-10) <input type="number" name="diet" min="1" max="10" placeholder="e.g., 7" /></label>
+            <label>Smoking status
+              <select name="smoking">
+                <option value="Never">Never</option>
+                <option value="Former">Former</option>
+                <option value="Current">Current</option>
+              </select>
+            </label>
+            <label>Alcohol use
+              <select name="alcohol">
+                <option value="None">None</option>
+                <option value="Occasional">Occasional</option>
+                <option value="Regular">Regular</option>
+              </select>
+            </label>
+            <label>Sleep hours/night <input type="number" name="sleep" step="0.5" min="0" max="24" placeholder="e.g., 7" /></label>
+            <label>Stress level (1-10) <input type="number" name="stress" min="1" max="10" placeholder="e.g., 4" /></label>
+            <label>History of hypertension
+              <select name="hypertension">
+                <option value="No">No</option>
+                <option value="Yes">Yes</option>
+              </select>
+            </label>
+            <label>History of high cholesterol
+              <select name="cholesterol_history">
+                <option value="No">No</option>
+                <option value="Yes">Yes</option>
+              </select>
+            </label>
+          </div>
+        </div>
+
+        <div class="cta-row studio-actions">
+          <button type="submit" class="button primary">Predict</button>
+          <a class="button secondary" href="{{ url_for('reset') }}">Cancel</a>
+        </div>
+      </form>
+
+      <aside class="studio-side card">
+        <div class="side-panel-header">
+          <p class="eyebrow">Live estimate</p>
+        </div>
+
+        <div class="live-score-wrap">
+          <div class="live-score-header">
+            <span>Live risk</span>
+            <small>Updated 2 mins ago</small>
+          </div>
+          <div id="liveRiskScore" class="live-risk-score">31%</div>
+          <div id="liveRiskBadge" class="live-risk-badge warning">Moderate risk</div>
+        </div>
+
+        <div class="mini-meter">
+          <span id="liveMeter" class="mini-meter-fill warning" style="width: 31%;"></span>
+        </div>
+
+        <div class="studio-side-list">
+          <div class="studio-side-item">
+            <span>BMI</span>
+            <strong id="summaryBMI">27.4</strong>
+          </div>
+          <div class="studio-side-item">
+            <span>Glucose</span>
+            <strong id="summaryGlucose">118</strong>
+          </div>
+          <div class="studio-side-item">
+            <span>Age</span>
+            <strong id="summaryAge">46</strong>
+          </div>
+          <div class="studio-side-item">
+            <span>BP</span>
+            <strong id="summaryBP">126</strong>
+          </div>
+          <div class="studio-side-item">
+            <span>Clinical outlook</span>
+            <strong id="riskNoteText">Actionable</strong>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<script>
+  function getOrDefault(selector, fallback) {
+    const element = document.querySelector(selector);
+    const rawValue = element && element.value !== '' ? element.value : null;
+    if (rawValue === null || rawValue === undefined || rawValue === '') {
+      return fallback;
+    }
+    return rawValue;
+  }
+
+  function calculateRisk() {
+    const glucose = parseFloat(getOrDefault('input[name="glucose"]', 118)) || 118;
+    const bmi = parseFloat(getOrDefault('input[name="bmi"]', 27.4)) || 27.4;
+    const age = parseFloat(getOrDefault('input[name="age"]', 46)) || 46;
+    const family = getOrDefault('select[name="family_history"]', 'No');
+    const hypertension = getOrDefault('select[name="hypertension"]', 'No');
+    const smoking = getOrDefault('select[name="smoking"]', 'Never');
+    const pregnancies = parseFloat(getOrDefault('input[name="pregnancies"]', 0)) || 0;
+
+    let score = 12;
+    score += age * 0.25;
+    score += glucose * 0.12;
+    score += bmi * 0.7;
+    if (pregnancies > 0) score += pregnancies * 2.2;
+    if (family === 'Yes') score += 12;
+    if (hypertension === 'Yes') score += 10;
+    if (smoking === 'Current') score += 18;
+    else if (smoking === 'Former') score += 8;
+
+    score = Math.max(6, Math.min(94, score));
+    return Math.round(score);
+  }
+
+  function updateRiskUI() {
+    const score = calculateRisk();
+    const glucose = parseFloat(getOrDefault('input[name="glucose"]', 118)) || 118;
+    const bmi = parseFloat(getOrDefault('input[name="bmi"]', 27.4)) || 27.4;
+    const age = parseFloat(getOrDefault('input[name="age"]', 46)) || 46;
+    const bp = parseFloat(getOrDefault('input[name="blood_pressure"]', 126)) || 126;
+
+    const scoreEl = document.getElementById('liveRiskScore');
+    const meterEl = document.getElementById('liveMeter');
+    const badgeEl = document.getElementById('liveRiskBadge');
+    const riskNoteText = document.getElementById('riskNoteText');
+    const summaryBMI = document.getElementById('summaryBMI');
+    const summaryGlucose = document.getElementById('summaryGlucose');
+    const summaryAge = document.getElementById('summaryAge');
+    const summaryBP = document.getElementById('summaryBP');
+
+    scoreEl.textContent = score + '%';
+    meterEl.style.width = score + '%';
+
+    summaryBMI.textContent = bmi.toFixed(1);
+    summaryGlucose.textContent = Math.round(glucose);
+    summaryAge.textContent = Math.round(age);
+    if (summaryBP) summaryBP.textContent = Math.round(bp);
+
+    let tier = 'Low risk';
+    let tierClass = 'safe';
+    let note = 'Actionable';
+
+    if (score >= 65) {
+      tier = 'High risk';
+      tierClass = 'danger';
+    } else if (score >= 35) {
+      tier = 'Moderate risk';
+      tierClass = 'warning';
+    }
+
+    badgeEl.textContent = tier;
+    badgeEl.className = 'live-risk-badge ' + tierClass;
+    meterEl.className = 'mini-meter-fill ' + tierClass;
+    riskNoteText.textContent = note;
+  }
+
+  const fullFields = [
+    'input[name="glucose"]',
+    'input[name="bmi"]',
+    'input[name="age"]',
+    'input[name="pregnancies"]',
+    'input[name="blood_pressure"]',
+    'select[name="family_history"]',
+    'select[name="hypertension"]',
+    'select[name="smoking"]'
+  ];
+
+  fullFields.forEach((selector) => {
+    const el = document.querySelector(selector);
+    if (el) {
+      el.addEventListener('input', updateRiskUI);
+      el.addEventListener('change', updateRiskUI);
+    }
+  });
+
+  updateRiskUI();
+</script>
+{% endblock %}

@@ -1,0 +1,208 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container" style="max-width: 1000px; padding: 2rem 0;">
+  <div class="card animate-fade-up" style="padding: 2.5rem;">
+    <div style="text-align: center; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 2px solid var(--border);">
+      <h2 style="font-size: 2rem; font-weight: 700; color: var(--primary);">Diabetes Risk Assessment</h2>
+      <p style="color: var(--text-muted); margin-top: 0.25rem;">
+        {{ patient.name }} · {{ patient.age }} years · {{ patient.gender }}
+      </p>
+      <p style="font-size: 0.85rem; color: var(--text-muted);">{{ date }}</p>
+    </div>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 2rem; align-items: center; justify-content: center; margin-bottom: 2rem;">
+      <div style="flex: 0 0 200px; text-align: center;">
+        <div style="position: relative; width: 200px; height: 200px; margin: 0 auto;">
+          <canvas id="riskGauge" width="200" height="200"></canvas>
+        </div>
+      </div>
+
+      <div style="flex: 1; min-width: 200px; text-align: center;">
+        <div style="font-size: 4rem; font-weight: 800; color: {{ color }}; line-height: 1;">
+          {{ probability }}%
+        </div>
+        <div class="risk-badge risk-{{ risk_level }}" style="font-size: 1.2rem; padding: 0.5rem 2rem; margin-top: 0.5rem;">
+          {{ result_text }}
+        </div>
+        <p style="color: var(--text-muted); margin-top: 0.75rem; font-size: 0.9rem;">
+          {% if risk_level == 'low' %}
+            Your results are within normal range. Keep up the healthy lifestyle.
+          {% elif risk_level == 'moderate' %}
+            You have some risk factors. Consider lifestyle changes and consult your doctor.
+          {% else %}
+            Your results indicate high risk. Please consult a healthcare provider immediately.
+          {% endif %}
+        </p>
+      </div>
+    </div>
+
+    <h4 style="margin: 2rem 0 1rem; color: var(--text-dark);">Health Snapshot</h4>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem;">
+      <div class="metric"><span class="metric-label">BMI</span><strong>{{ bmi }}</strong></div>
+      <div class="metric"><span class="metric-label">Glucose</span><strong>{{ glucose }} mg/dL</strong></div>
+      <div class="metric"><span class="metric-label">Age</span><strong>{{ age }} years</strong></div>
+      <div class="metric"><span class="metric-label">Blood Pressure</span><strong>{{ bp_systolic }}/{{ bp_diastolic }}</strong></div>
+      {% if activity_score is defined and activity_score > 0 %}
+      <div class="metric"><span class="metric-label">Activity</span><strong>{{ activity_score }}/10</strong></div>
+      {% else %}
+      <div class="metric"><span class="metric-label">Activity</span><strong>N/A</strong></div>
+      {% endif %}
+      {% if patient.smoking is defined and patient.smoking != 'Never' %}
+      <div class="metric"><span class="metric-label">Smoking</span><strong>{{ patient.smoking }}</strong></div>
+      {% endif %}
+      {% if patient.family_history == 'Yes' %}
+      <div class="metric"><span class="metric-label">Family History</span><strong>Yes</strong></div>
+      {% endif %}
+    </div>
+
+    <div class="panel recommendations-panel" style="margin-top: 1.5rem;">
+      <div class="panel-header">
+        <span><i class="fas fa-list-check"></i> Recommendations</span>
+      </div>
+      <div class="recommendation-groups">
+        <div class="recommendation-block high">
+          <h4>High priority</h4>
+          <ul class="recommendation-list">
+            {% for item in recommendations %}
+              {% if item.priority == 'high' %}
+              <li class="recommendation-item high">
+                <i class="fas fa-triangle-exclamation rec-icon" aria-hidden="true"></i>
+                <div class="rec-body">
+                  <strong class="rec-title">{{ item.text }}</strong>
+                  <span class="rec-desc">Early action recommended — consider urgent review or testing.</span>
+                </div>
+              </li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+        <div class="recommendation-block medium">
+          <h4>Medium priority</h4>
+          <ul class="recommendation-list">
+            {% for item in recommendations %}
+              {% if item.priority == 'medium' %}
+              <li class="recommendation-item medium">
+                <i class="fas fa-circle-exclamation rec-icon" aria-hidden="true"></i>
+                <div class="rec-body">
+                  <strong class="rec-title">{{ item.text }}</strong>
+                  <span class="rec-desc">Action recommended — lifestyle changes and follow-up monitoring.</span>
+                </div>
+              </li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+        <div class="recommendation-block low">
+          <h4>Low priority</h4>
+          <ul class="recommendation-list">
+            {% for item in recommendations %}
+              {% if item.priority == 'low' %}
+              <li class="recommendation-item low">
+                <i class="fas fa-circle-check rec-icon" aria-hidden="true"></i>
+                <div class="rec-body">
+                  <strong class="rec-title">{{ item.text }}</strong>
+                  <span class="rec-desc">Maintenance suggestion — continue routine screening and healthy habits.</span>
+                </div>
+              </li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem; padding-top: 1.5rem; border-top: 2px solid var(--border);">
+      <a href="{{ url_for('analytics') }}" class="btn btn-primary" style="padding: 0.8rem 2rem;">
+        View Detailed Analysis
+      </a>
+      <a href="{{ url_for('download_report') }}" class="btn btn-outline" style="padding: 0.8rem 2rem;">
+        Download PDF Report
+      </a>
+      <a href="/assessment" class="btn btn-outline" style="padding: 0.8rem 2rem;">
+        New Assessment
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+  const canvas = document.getElementById('riskGauge');
+  const ctx = canvas.getContext('2d');
+  const risk = {{ probability }};
+  const color = '{{ color }}';
+  const cx = 100, cy = 100, r = 85;
+
+  ctx.clearRect(0, 0, 200, 200);
+
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0.5 * Math.PI, 2.5 * Math.PI);
+  ctx.strokeStyle = '#e2e8f0';
+  ctx.lineWidth = 16;
+  ctx.stroke();
+
+  const angle = 0.5 * Math.PI + (risk / 100) * 2 * Math.PI;
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0.5 * Math.PI, angle);
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 16;
+  ctx.stroke();
+
+  const needleAngle = 0.5 * Math.PI + (risk / 100) * 2 * Math.PI;
+  const x = cx + Math.cos(needleAngle) * 60;
+  const y = cy + Math.sin(needleAngle) * 60;
+  ctx.beginPath();
+  ctx.moveTo(cx, cy);
+  ctx.lineTo(x, y);
+  ctx.strokeStyle = '#1e293b';
+  ctx.lineWidth = 3;
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.arc(cx, cy, 6, 0, 2 * Math.PI);
+  ctx.fillStyle = '#1e293b';
+  ctx.fill();
+
+  ctx.shadowColor = color;
+  ctx.shadowBlur = 15;
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0.5 * Math.PI, angle);
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 16;
+  ctx.stroke();
+  ctx.shadowBlur = 0;
+</script>
+
+<style>
+  .metric {
+    background: var(--bg-page);
+    border-radius: 0.75rem;
+    padding: 1rem;
+    text-align: center;
+  }
+  .metric-label {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 0.25rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .metric strong {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .risk-badge {
+    display: inline-block;
+    padding: 0.3rem 1.2rem;
+    border-radius: 2rem;
+    font-weight: 600;
+    font-size: 0.85rem;
+  }
+  .risk-low { background: #d1fae5; color: #065f46; }
+  .risk-moderate { background: #fed7aa; color: #92400e; }
+  .risk-high { background: #fee2e2; color: #991b1b; }
+</style>
+{% endblock %}
+

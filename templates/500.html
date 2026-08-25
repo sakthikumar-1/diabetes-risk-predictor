@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}500{% endblock %}
+
+{% block content %}
+<section class="card not-found">
+  <h2>Something went wrong</h2>
+  <p>The server hit an unexpected error. Please try again.</p>
+  <a class="button primary" href="{{ url_for('index') }}">Return home</a>
+</section>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Bulk Prediction{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 800px; padding-top: 2rem; padding-bottom: 2rem;">
+  <div class="card animate-fade-up">
+    <h2 style="margin-bottom: 0.5rem;">Bulk Prediction</h2>
+    <p class="text-muted" style="margin-bottom: 1.5rem;">Upload a CSV file with health data to get predictions for multiple people at once.</p>
+
+    <form id="bulkUploadForm" action="{{ url_for('bulk_predict') }}" method="POST" enctype="multipart/form-data">
+      <div class="form-group">
+        <label class="form-label">Prediction mode</label>
+        <select name="mode" class="form-select" required>
+          <option value="quick">Quick (BMI, Glucose, Age)</option>
+          <option value="full">Full (All 8 parameters)</option>
+        </select>
+      </div>
+
+      <div class="drop-zone" id="dropZone">
+        <div style="font-size: 3rem; margin-bottom: 0.5rem;"><i class="fas fa-file-csv"></i></div>
+        <p><strong>Drop your CSV file here</strong> or click to browse</p>
+        <p class="text-muted" style="font-size: 0.85rem;">Accepted format: .csv</p>
+        <input type="file" name="file" accept=".csv" style="display:none;" id="fileInput" required>
+      </div>
+
+      <div id="fileInfo" style="display:none; padding: 0.75rem; background: var(--primary-light); border-radius: 0.75rem; margin: 1rem 0;">
+        <span id="fileName">file.csv</span> uploaded successfully
+      </div>
+
+      <div id="bulkLoading" style="display:none; padding: 0.5rem 0.75rem; background: rgba(38,99,235,0.06); border-radius: 8px; margin-bottom: 0.75rem; color: var(--text-soft);">Processing upload…</div>
+
+      <div id="bulkStatus" class="form-status" aria-live="polite"></div>
+
+      <button type="submit" class="btn btn-primary btn-block">Process Bulk Upload →</button>
+    </form>
+
+
+    <div style="margin-top: 2rem; padding: 1rem; background: #f8fafc; border-radius: 0.75rem;">
+      <h4 style="margin-bottom: 0.5rem;">CSV Format Requirements</h4>
+      <p class="text-muted" style="font-size: 0.85rem;">
+        <strong>Quick mode:</strong> columns: <code>bmi, glucose, age</code><br>
+        <strong>Full mode:</strong> columns: <code>pregnancies, glucose, blood_pressure, skin_thickness, insulin, bmi, dpf, age</code>
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,305 @@
+{% extends "base.html" %}
+
+{% block title %}Detailed Analysis{% endblock %}
+
+{% block content %}
+<div class="analytics-page">
+  <div class="card analytics-shell">
+    <div class="analytics-header">
+      <div>
+        <p class="eyebrow">Patient summary</p>
+        <h2>{{ name }}</h2>
+        <p class="subtle-meta">{{ age }} years · {{ gender }} · {{ date }}</p>
+      </div>
+      <div class="risk-badge risk-{{ risk_level }}">{{ result_text }}</div>
+    </div>
+
+    <div class="analytics-grid top-grid">
+      <div class="panel metric-panel">
+        <div class="panel-header">
+          <span><i class="fas fa-chart-line"></i> Risk score breakdown</span>
+        </div>
+
+        <div class="score-line-wrap">
+          <div class="score-number" style="color: {{ color }};">{{ probability|round(1) }}%</div>
+          <div class="score-track">
+            <span class="score-fill" style="width: {{ probability }}%; background: linear-gradient(90deg, #22c55e 0%, #f59e0b 55%, #ef4444 100%);"></span>
+          </div>
+        </div>
+
+        <div class="factor-list">
+          {% for factor in factors %}
+            {% if factor.percent > 0 %}
+            <div class="factor-row">
+              <div class="factor-meta">
+                <span>{{ factor.label }}</span>
+                <strong>{{ factor.value }}</strong>
+              </div>
+              <div class="factor-pill">+{{ factor.percent }}%</div>
+            </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+
+        <p class="analysis-copy">
+          {% if risk_level == 'low' %}
+            Risk is currently low, with no major red flags in the current profile. Continue routine screening and maintain healthy habits.
+          {% elif risk_level == 'moderate' %}
+            Risk is elevated by several factors including glucose, BMI, and lifestyle patterns. A preventive plan and follow-up review are recommended.
+          {% else %}
+            The profile shows multiple elevated risk drivers. This score suggests a higher likelihood of diabetes and warrants prompt clinical follow-up.
+          {% endif %}
+        </p>
+      </div>
+
+      <div class="panel summary-panel">
+        <div class="panel-header">
+          <span><i class="fas fa-user-md"></i> Clinical summary</span>
+        </div>
+        <div class="summary-metrics">
+          <div class="mini-stat">
+            <span>Glucose</span>
+            <strong>{{ glucose }} mg/dL</strong>
+          </div>
+          <div class="mini-stat">
+            <span>BMI</span>
+            <strong>{{ bmi }}</strong>
+          </div>
+          <div class="mini-stat">
+            <span>Age</span>
+            <strong>{{ age }}</strong>
+          </div>
+          <div class="mini-stat">
+            <span>Blood pressure</span>
+            <strong>{{ bp_systolic }}/{{ bp_diastolic }}</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel metrics-panel">
+      <div class="panel-header">
+        <span><i class="fas fa-table"></i> Clinical metrics</span>
+      </div>
+      <div class="table-wrap">
+        <table class="analytics-table">
+          <thead>
+            <tr>
+              <th>Parameter</th>
+              <th>Value</th>
+              <th>Normal range</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Glucose</td>
+              <td>{{ glucose }} mg/dL</td>
+              <td>70-99 mg/dL</td>
+              <td class="status warn"><i class="fas fa-triangle-exclamation"></i> High</td>
+            </tr>
+            <tr>
+              <td>BMI</td>
+              <td>{{ bmi }}</td>
+              <td>18.5-24.9</td>
+              <td class="status warn"><i class="fas fa-triangle-exclamation"></i> Overweight</td>
+            </tr>
+            <tr>
+              <td>Age</td>
+              <td>{{ age }} years</td>
+              <td>—</td>
+              <td class="status neutral">—</td>
+            </tr>
+            <tr>
+              <td>Blood Pressure</td>
+              <td>{{ bp_systolic }}/{{ bp_diastolic }}</td>
+              <td>90-120 / 60-80</td>
+              <td class="status ok"><i class="fas fa-circle-check"></i> Normal</td>
+            </tr>
+            <tr>
+              <td>Activity</td>
+              <td>{% if patient.activity %}{{ patient.activity }} min/week{% else %}N/A{% endif %}</td>
+              <td>150+ min/week</td>
+              <td class="status neutral">N/A</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    {% if has_lifestyle_data %}
+    <div class="analytics-grid bottom-grid">
+      <div class="panel chart-panel">
+        <div class="panel-header">
+          <span><i class="fas fa-chart-pie"></i> Lifestyle profile</span>
+        </div>
+        <div class="chart-canvas-wrap">
+          <canvas id="lifestyleRadar" height="180"></canvas>
+        </div>
+      </div>
+
+      <div class="panel lifestyle-panel">
+        <div class="panel-header">
+          <span><i class="fas fa-notes-medical"></i> Clinical notes</span>
+        </div>
+        <ul class="notes-list">
+          {% if lifestyle.activity and lifestyle.activity < 150 %}
+          <li>Your activity level is below recommended ({{ lifestyle.activity }} min/week).</li>
+          {% endif %}
+          {% if lifestyle.smoking == 'Never' %}
+          <li>No smoking history detected.</li>
+          {% endif %}
+          {% if lifestyle.alcohol and lifestyle.alcohol != 'None' %}
+          <li>Alcohol use is present and may be a relevant contributor to your overall risk profile.</li>
+          {% endif %}
+          {% if patient.family_history == 'Yes' %}
+          <li>Family history of diabetes is present.</li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+    {% else %}
+    <div class="panel lifestyle-panel">
+      <div class="panel-header">
+        <span><i class="fas fa-notes-medical"></i> Lifestyle summary</span>
+      </div>
+      <p class="analysis-copy">No lifestyle data provided for this assessment.</p>
+    </div>
+    {% endif %}
+
+    <div class="panel recommendations-panel">
+      <div class="panel-header">
+        <span><i class="fas fa-list-check"></i> Expanded recommendations</span>
+      </div>
+      <div class="recommendation-groups">
+        <div class="recommendation-block high">
+          <h4>High priority</h4>
+          <ul class="recommendation-list">
+            {% for item in recommendations %}
+              {% if item.priority == 'high' %}
+              <li class="recommendation-item high">
+                <i class="fas fa-triangle-exclamation rec-icon" aria-hidden="true"></i>
+                <div class="rec-body">
+                  <strong class="rec-title">{{ item.text }}</strong>
+                  <span class="rec-desc">Early action recommended — consider urgent review or testing.</span>
+                </div>
+              </li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+
+        <div class="recommendation-block medium">
+          <h4>Medium priority</h4>
+          <ul class="recommendation-list">
+            {% for item in recommendations %}
+              {% if item.priority == 'medium' %}
+              <li class="recommendation-item medium">
+                <i class="fas fa-circle-exclamation rec-icon" aria-hidden="true"></i>
+                <div class="rec-body">
+                  <strong class="rec-title">{{ item.text }}</strong>
+                  <span class="rec-desc">Action recommended — lifestyle changes and follow-up monitoring.</span>
+                </div>
+              </li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+
+        <div class="recommendation-block low">
+          <h4>Low priority</h4>
+          <ul class="recommendation-list">
+            {% for item in recommendations %}
+              {% if item.priority == 'low' %}
+              <li class="recommendation-item low">
+                <i class="fas fa-circle-check rec-icon" aria-hidden="true"></i>
+                <div class="rec-body">
+                  <strong class="rec-title">{{ item.text }}</strong>
+                  <span class="rec-desc">Maintenance suggestion — continue routine screening and healthy habits.</span>
+                </div>
+              </li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel action-panel">
+      <div class="panel-header">
+        <span><i class="fas fa-route"></i> Action plan</span>
+      </div>
+      {% if risk_level == 'high' %}
+      <ul class="action-list">
+        <li>Consult a doctor within 1 week and request an HbA1c or fasting glucose review.</li>
+        <li>Start a structured plan for nutrition, movement, and sleep quality immediately.</li>
+      </ul>
+      {% elif risk_level == 'moderate' %}
+      <ul class="action-list">
+        <li>Schedule a check-up in 3 months to monitor glucose and metabolic markers.</li>
+        <li>Start daily walking and reduce refined carbohydrates or sugary drinks.</li>
+      </ul>
+      {% else %}
+      <ul class="action-list">
+        <li>Maintain annual screening and continue healthy, preventative routines.</li>
+        <li>Keep a balanced diet, regular movement, and a sustainable sleep routine.</li>
+      </ul>
+      {% endif %}
+    </div>
+
+    <div class="medical-disclaimer">
+      Medical disclaimer: This assessment is for educational and informational purposes only and is not a substitute for professional medical advice, diagnosis, or treatment.
+    </div>
+
+    <div class="cta-row analytics-actions">
+      <a href="{{ url_for('download_report') }}" class="button primary">Download PDF Report</a>
+      <a href="{{ url_for('results') }}" class="button secondary">Back to Results</a>
+    </div>
+  </div>
+</div>
+
+{% if has_lifestyle_data %}
+<script>
+  const radarCanvas = document.getElementById('lifestyleRadar');
+  if (radarCanvas) {
+    const ctx = radarCanvas.getContext('2d');
+    const labels = ['Activity', 'Diet', 'Sleep', 'Stress', 'Smoking', 'Alcohol'];
+    const values = [
+      {{ lifestyle.activity if lifestyle.activity else 0 }},
+      {{ lifestyle.diet if lifestyle.diet else 0 }},
+      {{ lifestyle.sleep if lifestyle.sleep else 0 }},
+      {{ 10 - (lifestyle.stress if lifestyle.stress else 0) }},
+      {% if lifestyle.smoking == 'Never' %}10{% elif lifestyle.smoking == 'Former' %}5{% else %}0{% endif %},
+      {% if lifestyle.alcohol == 'None' %}10{% elif lifestyle.alcohol == 'Occasional' %}5{% else %}0{% endif %}
+    ];
+
+    new Chart(ctx, {
+      type: 'radar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Lifestyle score',
+          data: values,
+          borderColor: '#2663eb',
+          backgroundColor: 'rgba(38,99,235,0.18)',
+          pointBackgroundColor: '#2663eb',
+          pointRadius: 3
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          r: {
+            min: 0,
+            max: 10,
+            ticks: { stepSize: 2 }
+          }
+        },
+        plugins: { legend: { display: false } }
+      }
+    });
+  }
+</script>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Assessment{% endblock %}
+
+{% block content %}
+<section class="assessment-chooser">
+  <div class="card chooser-card">
+    <p class="eyebrow">Clinical assessment</p>
+    <h2>Choose your evaluation type</h2>
+    <p class="form-description">Select a quick screening for a fast estimate or a full assessment for a deeper clinical review.</p>
+
+    <div class="choice-grid">
+      <a class="choice-tile" href="{{ url_for('quick') }}">
+        <div class="choice-icon"> <i class="fas fa-bolt" style="font-size: 2.5rem; color: var(--primary);"></i> </div>
+        <div>
+          <div class="choice-tag">Quick</div>
+          <h3>Fast risk check</h3>
+          <p>Use key health factors like BMI, glucose, and age for a rapid estimate.</p>
+        </div>
+      </a>
+
+      <a class="choice-tile" href="{{ url_for('full') }}">
+        <div class="choice-icon"> <i class="fas fa-chart-bar" style="font-size: 2.2rem; color: var(--primary);"></i> </div>
+        <div>
+          <div class="choice-tag alt">Full</div>
+          <h3>Clinical review</h3>
+          <p>Use broader medical, lifestyle, and risk modifier inputs for detailed analysis.</p>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+{% endblock %}

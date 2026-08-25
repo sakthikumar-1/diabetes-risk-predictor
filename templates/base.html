@@ -1,76 +1,60 @@
-{% block content %}
-<div class="container" style="max-width: 1000px; padding: 3rem 0;">
-  <div style="text-align: center; margin-bottom: 2.5rem;">
-    <span style="display: inline-block; background: var(--primary-light); color: var(--primary); padding: 0.25rem 1rem; border-radius: 2rem; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;">
-      Clinical Assessment
-    </span>
-    <h1 style="font-size: 2.5rem; font-weight: 700; margin-top: 0.75rem; margin-bottom: 0.5rem; color: var(--text-primary);">
-      Choose Your Evaluation Type
-    </h1>
-    <p style="color: var(--text-secondary); font-size: 1.05rem; max-width: 550px; margin: 0 auto;">
-      Select a quick screening for a fast estimate or a full assessment for a deeper clinical review.
-    </p>
-  </div>
-
-  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
-    <a href="{{ url_for('quick') }}" style="text-decoration: none;">
-      <div class="card choice-card" style="padding: 2.5rem 2rem; text-align: center; cursor: pointer; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: all 0.3s ease;">
-        <div style="display: inline-flex; align-items: center; justify-content: center; width: 4rem; height: 4rem; border-radius: 50%; background: var(--primary-light); margin-bottom: 1.25rem;">
-          <i class="fas fa-bolt" style="font-size: 1.8rem; color: var(--primary);"></i>
-        </div>
-        <span style="display: inline-block; background: var(--primary); color: white; padding: 0.2rem 0.8rem; border-radius: 2rem; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.75rem;">Quick</span>
-        <h3 style="font-size: 1.4rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-primary);">Fast Risk Check</h3>
-        <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.5; max-width: 280px; margin: 0 auto;">
-          Use key health factors like BMI, glucose, and age for a rapid estimate.
-        </p>
-        <div style="margin-top: 1.5rem;">
-          <span class="btn btn-primary" style="pointer-events: none; padding: 0.6rem 1.8rem; font-size: 0.9rem;">Get Started →</span>
-        </div>
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}GlycaSense – Diabetes Risk Predictor{% endblock %}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container nav">
+      <a class="brand" href="{{ url_for('index') }}">
+        <span class="brand-mark"><i class="fas fa-stethoscope" style="font-size: 1.8rem; color: var(--primary);"></i></span>
+        <span>Diabetes Risk Predictor</span>
+      </a>
+      <nav aria-label="Main navigation">
+        <a href="{{ url_for('index') }}">Overview</a>
+        <a href="{{ url_for('assessment') }}">Assessment</a>
+        <a href="{{ url_for('bulk_page') }}">Bulk import</a>
+      </nav>
+      <div class="nav-actions">
+        <button id="themeToggle" class="icon-button" aria-pressed="false" title="Toggle theme">
+          <i id="themeIcon" class="fas fa-moon"></i>
+        </button>
       </div>
-    </a>
+    </div>
+  </header>
 
-    <a href="{{ url_for('full') }}" style="text-decoration: none;">
-      <div class="card choice-card" style="padding: 2.5rem 2rem; text-align: center; cursor: pointer; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: all 0.3s ease;">
-        <div style="display: inline-flex; align-items: center; justify-content: center; width: 4rem; height: 4rem; border-radius: 50%; background: var(--primary-light); margin-bottom: 1.25rem;">
-          <i class="fas fa-chart-bar" style="font-size: 1.8rem; color: var(--primary);"></i>
+  <main class="container shell">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-stack">
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">{{ message }}</div>
+          {% endfor %}
         </div>
-        <span style="display: inline-block; background: var(--primary); color: white; padding: 0.2rem 0.8rem; border-radius: 2rem; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.75rem;">Full</span>
-        <h3 style="font-size: 1.4rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-primary);">Clinical Review</h3>
-        <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.5; max-width: 280px; margin: 0 auto;">
-          Use broader medical, lifestyle, and risk modifier inputs for detailed analysis.
-        </p>
-        <div style="margin-top: 1.5rem;">
-          <span class="btn btn-outline" style="pointer-events: none; padding: 0.6rem 1.8rem; font-size: 0.9rem;">Get Started →</span>
-        </div>
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <span class="brand-mark"><i class="fas fa-heartbeat"></i></span>
+        <span>MedInsight AI</span>
       </div>
-    </a>
-  </div>
-</div>
+      <p>Clinical intelligence for modern care teams.</p>
+      <span class="footer-copy">© 2026 MedInsight AI</span>
+    </div>
+  </footer>
 
-<style>
-  .choice-card {
-    transition: all 0.3s ease;
-    border: 2px solid transparent;
-  }
-  .choice-card:hover {
-    transform: translateY(-6px);
-    border-color: var(--primary);
-    box-shadow: 0 12px 40px rgba(0,0,0,0.08);
-  }
-  .choice-card:hover .btn-primary {
-    background: var(--primary-dark);
-    box-shadow: 0 4px 14px rgba(196, 123, 46, 0.3);
-  }
-  .choice-card:hover .btn-outline {
-    border-color: var(--primary);
-    color: var(--primary);
-    background: var(--primary-light);
-  }
-  [data-theme="dark"] .choice-card:hover {
-    box-shadow: 0 12px 40px rgba(0,0,0,0.5);
-  }
-  [data-theme="dark"] .choice-card:hover .btn-outline {
-    background: rgba(196, 123, 46, 0.15);
-  }
-</style>
-{% endblock %}
+  <script src="{{ url_for('static', filename='scripts/main.js') }}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

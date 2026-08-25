@@ -10,11 +10,9 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
-
   <!-- ===== HEADER / NAVBAR ===== -->
   <header class="topbar" role="banner">
     <div class="container nav">
-      <!-- Brand / Logo -->
       <a class="brand" href="{{ url_for('index') }}" aria-label="Home">
         <span class="brand-mark">
           <i class="fas fa-stethoscope" style="font-size: 1.8rem; color: var(--primary);"></i>
@@ -22,14 +20,12 @@
         <span>Diabetes Risk Predictor</span>
       </a>
 
-      <!-- Hamburger Toggle (visible on mobile) -->
       <button class="hamburger" id="hamburgerToggle" aria-expanded="false" aria-label="Toggle navigation menu" aria-controls="mainNav">
         <span class="hamburger-line"></span>
         <span class="hamburger-line"></span>
         <span class="hamburger-line"></span>
       </button>
 
-      <!-- Navigation Links -->
       <nav id="mainNav" class="nav-links" aria-label="Main navigation" role="navigation">
         <a href="{{ url_for('index') }}" class="nav-link {% if request.path == '/' %}active{% endif %}">Overview</a>
         <a href="{{ url_for('assessment') }}" class="nav-link {% if request.path == '/assessment' %}active{% endif %}">Assessment</a>
@@ -103,7 +99,6 @@
 
       if (!hamburger || !nav) return;
 
-      // Close menu when clicking outside
       document.addEventListener('click', (e) => {
         if (!hamburger.contains(e.target) && !nav.contains(e.target)) {
           nav.classList.remove('open');
@@ -115,11 +110,9 @@
         e.stopPropagation();
         const isOpen = nav.classList.toggle('open');
         hamburger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-        // Prevent body scroll when menu is open
         document.body.style.overflow = isOpen ? 'hidden' : '';
       });
 
-      // Close menu when a link is clicked (mobile)
       nav.querySelectorAll('a').forEach((link) => {
         link.addEventListener('click', () => {
           nav.classList.remove('open');
@@ -128,7 +121,6 @@
         });
       });
 
-      // Close on Escape key
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && nav.classList.contains('open')) {
           nav.classList.remove('open');

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Diabetes Risk Predictor | Clinical Intelligence</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
@@ -10,25 +10,37 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
+
   <!-- ===== HEADER / NAVBAR ===== -->
-  <header class="topbar">
+  <header class="topbar" role="banner">
     <div class="container nav">
-      <a class="brand" href="{{ url_for('index') }}">
-        <span class="brand-mark"><i class="fas fa-stethoscope" style="font-size: 1.8rem; color: var(--primary);"></i></span>
+      <!-- Brand / Logo -->
+      <a class="brand" href="{{ url_for('index') }}" aria-label="Home">
+        <span class="brand-mark">
+          <i class="fas fa-stethoscope" style="font-size: 1.8rem; color: var(--primary);"></i>
+        </span>
         <span>Diabetes Risk Predictor</span>
       </a>
 
-      <nav aria-label="Main navigation">
-        <a href="{{ url_for('index') }}">Overview</a>
-        <a href="{{ url_for('assessment') }}">Assessment</a>
-        <a href="{{ url_for('bulk_page') }}">Bulk import</a>
-      </nav>
+      <!-- Hamburger Toggle (visible on mobile) -->
+      <button class="hamburger" id="hamburgerToggle" aria-expanded="false" aria-label="Toggle navigation menu" aria-controls="mainNav">
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+      </button>
 
-      <div class="nav-actions">
-        <button id="themeToggle" class="icon-button" aria-pressed="false" title="Toggle theme">
-          <i id="themeIcon" class="fas fa-moon"></i>
-        </button>
-      </div>
+      <!-- Navigation Links -->
+      <nav id="mainNav" class="nav-links" aria-label="Main navigation" role="navigation">
+        <a href="{{ url_for('index') }}" class="nav-link {% if request.path == '/' %}active{% endif %}">Overview</a>
+        <a href="{{ url_for('assessment') }}" class="nav-link {% if request.path == '/assessment' %}active{% endif %}">Assessment</a>
+        <a href="{{ url_for('bulk_page') }}" class="nav-link {% if request.path == '/bulk' %}active{% endif %}">Bulk import</a>
+
+        <div class="nav-actions">
+          <button id="themeToggle" class="icon-button" aria-pressed="false" title="Toggle theme">
+            <i id="themeIcon" class="fas fa-moon"></i>
+          </button>
+        </div>
+      </nav>
     </div>
   </header>
 
@@ -48,7 +60,7 @@
   </main>
 
   <!-- ===== FOOTER ===== -->
-  <footer class="site-footer">
+  <footer class="site-footer" role="contentinfo">
     <div class="container footer-inner">
       <div class="footer-brand">
         <span class="brand-mark"><i class="fas fa-heartbeat"></i></span>
@@ -61,24 +73,73 @@
 
   <!-- ===== SCRIPTS ===== -->
   <script src="{{ url_for('static', filename='scripts/main.js') }}"></script>
+
   <script>
     // Theme toggle
-    const toggle = document.getElementById('themeToggle');
-    const icon = document.getElementById('themeIcon');
-    const html = document.documentElement;
-    const saved = localStorage.getItem('theme') || 'light';
-    html.setAttribute('data-theme', saved);
-    icon.className = saved === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+    (function initTheme() {
+      const toggle = document.getElementById('themeToggle');
+      const icon = document.getElementById('themeIcon');
+      const html = document.documentElement;
+      const saved = localStorage.getItem('theme') || 'light';
+      html.setAttribute('data-theme', saved);
+      icon.className = saved === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
 
-    toggle.addEventListener('click', () => {
-      const current = html.getAttribute('data-theme');
-      const next = current === 'light' ? 'dark' : 'light';
-      html.setAttribute('data-theme', next);
-      localStorage.setItem('theme', next);
-      icon.className = next === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
-      toggle.setAttribute('aria-pressed', next === 'dark' ? 'true' : 'false');
-    });
+      if (toggle) {
+        toggle.addEventListener('click', () => {
+          const current = html.getAttribute('data-theme');
+          const next = current === 'light' ? 'dark' : 'light';
+          html.setAttribute('data-theme', next);
+          localStorage.setItem('theme', next);
+          icon.className = next === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+          toggle.setAttribute('aria-pressed', next === 'dark' ? 'true' : 'false');
+        });
+      }
+    })();
+
+    // Hamburger toggle
+    (function initHamburger() {
+      const hamburger = document.getElementById('hamburgerToggle');
+      const nav = document.getElementById('mainNav');
+
+      if (!hamburger || !nav) return;
+
+      // Close menu when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!hamburger.contains(e.target) && !nav.contains(e.target)) {
+          nav.classList.remove('open');
+          hamburger.setAttribute('aria-expanded', 'false');
+        }
+      });
+
+      hamburger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = nav.classList.toggle('open');
+        hamburger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        // Prevent body scroll when menu is open
+        document.body.style.overflow = isOpen ? 'hidden' : '';
+      });
+
+      // Close menu when a link is clicked (mobile)
+      nav.querySelectorAll('a').forEach((link) => {
+        link.addEventListener('click', () => {
+          nav.classList.remove('open');
+          hamburger.setAttribute('aria-expanded', 'false');
+          document.body.style.overflow = '';
+        });
+      });
+
+      // Close on Escape key
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && nav.classList.contains('open')) {
+          nav.classList.remove('open');
+          hamburger.setAttribute('aria-expanded', 'false');
+          document.body.style.overflow = '';
+          hamburger.focus();
+        }
+      });
+    })();
   </script>
+
   {% block scripts %}{% endblock %}
 </body>
 </html>

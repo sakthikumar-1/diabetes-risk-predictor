@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
   // ============================================================
-  // THEME TOGGLE
+  // THEME TOGGLE 
   // ============================================================
   const themeToggle = document.getElementById('themeToggle');
   const themeIcon = document.getElementById('themeIcon');

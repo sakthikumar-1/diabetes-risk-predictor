@@ -1,0 +1,392 @@
+{% extends "base.html" %}
+
+{% block title %}Detailed Clinical Analytics – GlucoShield{% endblock %}
+
+{% block content %}
+<div class="analytics-shell-modern">
+  <div class="card" style="padding: 2.25rem;">
+    <!-- Patient Header Card -->
+    <div class="report-header-banner" style="margin-bottom: 2rem;">
+      <div class="patient-identity-block">
+        <div class="patient-avatar-badge" style="background: var(--primary-grad);">
+          <i class="fas fa-chart-line"></i>
+        </div>
+        <div class="patient-info-meta">
+          <div class="eyebrow" style="margin-bottom: 0.25rem;">
+            <i class="fas fa-stethoscope"></i> Multi-Factor Clinical Decomposition
+          </div>
+          <h2>{{ name }}</h2>
+          <p>
+            <span>{{ age|int }} years</span> · 
+            <span>{{ gender }}</span> · 
+            <span style="color: var(--text-muted);"><i class="fas fa-calendar-alt"></i> {{ date }}</span>
+          </p>
+        </div>
+      </div>
+
+      <div>
+        {% if risk_level == 'low' %}
+          <span class="live-triage-badge safe" style="font-size: 0.95rem; padding: 0.5rem 1.25rem;">
+            <i class="fas fa-circle-check"></i> {{ result_text }}
+          </span>
+        {% elif risk_level == 'moderate' %}
+          <span class="live-triage-badge warning" style="font-size: 0.95rem; padding: 0.5rem 1.25rem;">
+            <i class="fas fa-triangle-exclamation"></i> {{ result_text }}
+          </span>
+        {% else %}
+          <span class="live-triage-badge danger" style="font-size: 0.95rem; padding: 0.5rem 1.25rem;">
+            <i class="fas fa-circle-exclamation"></i> {{ result_text }}
+          </span>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Top Unequal Grid: Risk Score Breakdown + Summary Metrics -->
+    <div class="analytics-grid-two-unequal">
+      <!-- Factor Breakdown Panel -->
+      <div class="panel factors-breakdown-card">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-main);">
+            <i class="fas fa-chart-pie" style="color: var(--primary); margin-right: 0.4rem;"></i>
+            Risk Driver Decomposition
+          </h3>
+          <span style="font-size: 1.5rem; font-weight: 800; color: {{ color }};">
+            {{ probability|round(1) }}%
+          </span>
+        </div>
+
+        <div class="factor-progress-item">
+          <div class="factor-meta-row">
+            <span>Cumulative Risk Estimate</span>
+            <strong>{{ probability|round(1) }}%</strong>
+          </div>
+          <div class="factor-bar-track">
+            <div class="factor-bar-fill" style="width: {{ probability }}%; background: linear-gradient(90deg, #10b981 0%, #f59e0b 50%, #ef4444 100%);"></div>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-top: 0.5rem;">
+          {% for factor in factors %}
+            {% if factor.percent > 0 %}
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1rem; background: var(--bg-surface); border: 1px solid var(--border-light); border-radius: var(--radius-md);">
+              <div>
+                <span style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); display: block;">
+                  {{ factor.label }}
+                </span>
+                <strong style="color: var(--text-main); font-size: 0.95rem;">{{ factor.value }}</strong>
+              </div>
+              <span class="live-triage-badge warning" style="font-size: 0.75rem; padding: 0.2rem 0.6rem;">
+                +{{ factor.percent }}% Weight
+              </span>
+            </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+
+        <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6; margin-top: 0.5rem;">
+          {% if risk_level == 'low' %}
+            Metabolic markers remain within normal parameters with no elevated risk red flags. Continue preventative routines and maintain healthy lifestyle factors.
+          {% elif risk_level == 'moderate' %}
+            Moderate risk signals identified across glucose tolerance and body mass indices. Preventative counseling and periodic HbA1c review are recommended.
+          {% else %}
+            Multiple high-impact risk drivers confirmed. Profile shows significant metabolic risk requiring clinical attention and formal confirmatory testing.
+          {% endif %}
+        </p>
+      </div>
+
+      <!-- Right Summary KPI Panel -->
+      <div class="panel" style="display: flex; flex-direction: column; gap: 1rem;">
+        <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-main);">
+          <i class="fas fa-stethoscope" style="color: var(--primary); margin-right: 0.4rem;"></i>
+          Biometric Key Vitals
+        </h3>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem;">
+          <div class="vital-metric-card" style="padding: 1rem;">
+            <span class="vital-label">Glucose</span>
+            <div class="vital-val" style="font-size: 1.35rem;">{{ glucose }} <small style="font-size: 0.7rem; color: var(--text-muted);">mg/dL</small></div>
+          </div>
+          <div class="vital-metric-card" style="padding: 1rem;">
+            <span class="vital-label">BMI</span>
+            <div class="vital-val" style="font-size: 1.35rem;">{{ bmi }} <small style="font-size: 0.7rem; color: var(--text-muted);">kg/m²</small></div>
+          </div>
+          <div class="vital-metric-card" style="padding: 1rem;">
+            <span class="vital-label">Age</span>
+            <div class="vital-val" style="font-size: 1.35rem;">{{ age|int }} <small style="font-size: 0.7rem; color: var(--text-muted);">yrs</small></div>
+          </div>
+          <div class="vital-metric-card" style="padding: 1rem;">
+            <span class="vital-label">Blood Pressure</span>
+            <div class="vital-val" style="font-size: 1.35rem;">{{ bp_systolic }}/{{ bp_diastolic }}</div>
+          </div>
+        </div>
+
+        <!-- Risk Modifiers List -->
+        <div style="margin-top: 0.5rem; border-top: 1px solid var(--border-light); padding-top: 0.75rem;">
+          <span style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); display: block; margin-bottom: 0.5rem;">
+            Active Clinical Modifiers
+          </span>
+          {% if modifiers %}
+            <div style="display: flex; flex-direction: column; gap: 0.4rem;">
+              {% for mod_name, mod_impact in modifiers %}
+                <div style="display: flex; justify-content: space-between; font-size: 0.825rem; padding: 0.4rem 0.6rem; background: var(--bg-surface); border-radius: var(--radius-sm);">
+                  <span>{{ mod_name }}</span>
+                  <strong style="color: var(--risk-mod);">+{{ mod_impact }}%</strong>
+                </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <div style="font-size: 0.85rem; color: var(--text-muted); font-style: italic;">
+              No additional secondary risk modifiers detected.
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Clinical Metrics Comparison Table -->
+    <div class="panel" style="margin-bottom: 2rem;">
+      <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 1.25rem; color: var(--text-main);">
+        <i class="fas fa-table" style="color: var(--primary); margin-right: 0.4rem;"></i>
+        Clinical Reference Range Comparison
+      </h3>
+
+      <div class="table-glass-wrap">
+        <table class="clinical-data-table">
+          <thead>
+            <tr>
+              <th>Biomarker / Indicator</th>
+              <th>Observed Value</th>
+              <th>Standard Reference Range</th>
+              <th>Clinical Stratification</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Fasting Glucose</strong></td>
+              <td>{{ glucose }} mg/dL</td>
+              <td>70 – 99 mg/dL</td>
+              <td>
+                {% if glucose > 125 %}
+                  <span class="status-badge-sm alert"><i class="fas fa-circle-exclamation"></i> Elevated (Diabetic Range)</span>
+                {% elif glucose > 99 %}
+                  <span class="status-badge-sm warn"><i class="fas fa-triangle-exclamation"></i> Impaired (Pre-Diabetic)</span>
+                {% else %}
+                  <span class="status-badge-sm ok"><i class="fas fa-circle-check"></i> Normal / Optimal</span>
+                {% endif %}
+              </td>
+            </tr>
+            <tr>
+              <td><strong>Body Mass Index (BMI)</strong></td>
+              <td>{{ bmi }} kg/m²</td>
+              <td>18.5 – 24.9 kg/m²</td>
+              <td>
+                {% if bmi >= 30 %}
+                  <span class="status-badge-sm alert"><i class="fas fa-circle-exclamation"></i> Class I+ Obesity</span>
+                {% elif bmi >= 25 %}
+                  <span class="status-badge-sm warn"><i class="fas fa-triangle-exclamation"></i> Overweight</span>
+                {% else %}
+                  <span class="status-badge-sm ok"><i class="fas fa-circle-check"></i> Normal Weight</span>
+                {% endif %}
+              </td>
+            </tr>
+            <tr>
+              <td><strong>Blood Pressure</strong></td>
+              <td>{{ bp_systolic }}/{{ bp_diastolic }} mmHg</td>
+              <td>90–120 / 60–80 mmHg</td>
+              <td>
+                {% if bp_systolic > 130 %}
+                  <span class="status-badge-sm warn"><i class="fas fa-triangle-exclamation"></i> Pre-hypertensive / Stage 1</span>
+                {% else %}
+                  <span class="status-badge-sm ok"><i class="fas fa-circle-check"></i> Optimal Blood Pressure</span>
+                {% endif %}
+              </td>
+            </tr>
+            <tr>
+              <td><strong>Patient Age</strong></td>
+              <td>{{ age|int }} years</td>
+              <td>Screening recommended ≥ 35 yrs</td>
+              <td>
+                <span class="status-badge-sm ok"><i class="fas fa-circle-check"></i> Monitored</span>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>Physical Exercise</strong></td>
+              <td>{% if patient.activity %}{{ patient.activity }} min/week{% else %}Not Specified{% endif %}</td>
+              <td>≥ 150 min/week moderate activity</td>
+              <td>
+                {% if patient.activity and patient.activity|float >= 150 %}
+                  <span class="status-badge-sm ok"><i class="fas fa-circle-check"></i> Meets Guideline</span>
+                {% else %}
+                  <span class="status-badge-sm warn"><i class="fas fa-triangle-exclamation"></i> Below Guideline</span>
+                {% endif %}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Lifestyle Radar Chart Panel (if lifestyle present) -->
+    {% if has_lifestyle_data %}
+    <div class="analytics-grid-two-unequal" style="margin-bottom: 2rem;">
+      <div class="panel">
+        <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-main);">
+          <i class="fas fa-chart-radar" style="color: var(--primary); margin-right: 0.4rem;"></i>
+          Lifestyle Profile Radar
+        </h3>
+        <div style="height: 260px; position: relative;">
+          <canvas id="lifestyleRadarCanvas"></canvas>
+        </div>
+      </div>
+
+      <div class="panel" style="display: flex; flex-direction: column; gap: 0.75rem;">
+        <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-main);">
+          <i class="fas fa-notes-medical" style="color: var(--primary); margin-right: 0.4rem;"></i>
+          Clinical Lifestyle Findings
+        </h3>
+        <ul style="padding-left: 1.25rem; display: flex; flex-direction: column; gap: 0.6rem; color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6;">
+          {% if lifestyle.activity and lifestyle.activity < 150 %}
+            <li>Physical activity is below the recommended 150 minutes per week threshold.</li>
+          {% endif %}
+          {% if lifestyle.smoking == 'Never' %}
+            <li>No history of tobacco usage. Beneficial cardiovascular protective factor.</li>
+          {% elif lifestyle.smoking == 'Current' %}
+            <li style="color: var(--risk-high);">Active tobacco consumption detected — significantly raises glycemic and vascular risk.</li>
+          {% endif %}
+          {% if lifestyle.alcohol and lifestyle.alcohol != 'None' %}
+            <li>Alcohol consumption recorded; consider moderation to enhance hepatic insulin sensitivity.</li>
+          {% endif %}
+          {% if patient.family_history == 'Yes' %}
+            <li>Positive family history in first-degree relative confirms genetic predisposition.</li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Structured Action Plan -->
+    <div class="panel" style="margin-bottom: 2rem; border-left: 4px solid var(--primary);">
+      <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--text-main);">
+        <i class="fas fa-route" style="color: var(--primary); margin-right: 0.4rem;"></i>
+        Recommended Clinical Action Plan
+      </h3>
+      {% if risk_level == 'high' %}
+        <ul style="padding-left: 1.25rem; display: flex; flex-direction: column; gap: 0.5rem; color: var(--text-secondary); font-size: 0.925rem; line-height: 1.6;">
+          <li><strong>Physician Review:</strong> Schedule formal evaluation with primary care provider within 7 days.</li>
+          <li><strong>Laboratory Diagnostics:</strong> Order Fasting Plasma Glucose (FPG) and Glycated Hemoglobin (HbA1c) panels.</li>
+          <li><strong>Nutritional Intervention:</strong> Refer to registered dietitian for structured medical nutrition therapy.</li>
+        </ul>
+      {% elif risk_level == 'moderate' %}
+        <ul style="padding-left: 1.25rem; display: flex; flex-direction: column; gap: 0.5rem; color: var(--text-secondary); font-size: 0.925rem; line-height: 1.6;">
+          <li><strong>Quarterly Monitoring:</strong> Schedule follow-up glycemic screening in 90 days.</li>
+          <li><strong>Targeted Exercise:</strong> Introduce at least 150 minutes of moderate aerobic movement weekly.</li>
+          <li><strong>Dietary Adjustments:</strong> Reduce refined carbohydrates and sugar-sweetened beverages.</li>
+        </ul>
+      {% else %}
+        <ul style="padding-left: 1.25rem; display: flex; flex-direction: column; gap: 0.5rem; color: var(--text-secondary); font-size: 0.925rem; line-height: 1.6;">
+          <li><strong>Annual Screening:</strong> Re-evaluate metabolic markers during regular annual physical examination.</li>
+          <li><strong>Wellness Preservation:</strong> Maintain balanced nutrient-dense diet and consistent sleep schedule.</li>
+        </ul>
+      {% endif %}
+    </div>
+
+    <!-- Medical Legal Disclaimer -->
+    <div style="padding: 1rem 1.25rem; background: var(--bg-panel); border-radius: var(--radius-md); font-size: 0.8rem; color: var(--text-muted); line-height: 1.6; border: 1px solid var(--border-light); margin-bottom: 2rem;">
+      <i class="fas fa-shield-halved" style="color: var(--primary); margin-right: 0.35rem;"></i>
+      <strong>Clinical Disclaimer:</strong> GlucoShield provides clinical risk stratification based on validated statistical models. It is designed for screening and decision-support assistance and does not replace formal laboratory diagnostic testing or professional clinical judgment.
+    </div>
+
+    <!-- Bottom Actions -->
+    <div class="results-action-row" style="padding-top: 1.5rem;">
+      <a href="{{ url_for('download_report') }}" class="btn btn-primary btn-lg">
+        <i class="fas fa-file-pdf"></i> Download Official PDF Report
+      </a>
+      <a href="{{ url_for('results') }}" class="btn btn-secondary btn-lg">
+        <i class="fas fa-arrow-left"></i> Back to Results
+      </a>
+      <a href="{{ url_for('assessment') }}" class="btn btn-outline btn-lg">
+        <i class="fas fa-plus-circle"></i> New Screening
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% if has_lifestyle_data %}
+<script>
+  // Chart.js Radar Chart for Lifestyle Factors
+  document.addEventListener('DOMContentLoaded', function() {
+    const canvas = document.getElementById('lifestyleRadarCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    const labels = ['Activity', 'Diet Quality', 'Sleep Score', 'Stress Mgmt', 'Tobacco Free', 'Alcohol Mod'];
+    const values = [
+      Math.min(10, ({{ lifestyle.activity if lifestyle.activity else 0 }}) / 15),
+      {{ lifestyle.diet if lifestyle.diet else 5 }},
+      Math.min(10, ({{ lifestyle.sleep if lifestyle.sleep else 7 }}) * 1.2),
+      Math.max(0, 10 - ({{ lifestyle.stress if lifestyle.stress else 5 }})),
+      {% if lifestyle.smoking == 'Never' %}10{% elif lifestyle.smoking == 'Former' %}5{% else %}1{% endif %},
+      {% if lifestyle.alcohol == 'None' %}10{% elif lifestyle.alcohol == 'Occasional' %}6{% else %}2{% endif %}
+    ];
+
+    const isDark = document.documentElement.classList.contains('dark');
+    const gridColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.08)';
+    const textColor = isDark ? '#94a3b8' : '#475569';
+
+    new Chart(ctx, {
+      type: 'radar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Patient Lifestyle Score',
+          data: values,
+          borderColor: '#0284c7',
+          backgroundColor: 'rgba(2, 132, 199, 0.2)',
+          pointBackgroundColor: '#0284c7',
+          pointBorderColor: '#ffffff',
+          pointHoverBackgroundColor: '#ffffff',
+          pointHoverBorderColor: '#0284c7',
+          borderWidth: 2,
+          pointRadius: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          r: {
+            min: 0,
+            max: 10,
+            ticks: {
+              stepSize: 2,
+              display: false
+            },
+            grid: {
+              color: gridColor
+            },
+            angleLines: {
+              color: gridColor
+            },
+            pointLabels: {
+              color: textColor,
+              font: {
+                family: 'Plus Jakarta Sans',
+                size: 11,
+                weight: '600'
+              }
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            display: false
+          }
+        }
+      }
+    });
+  });
+</script>
+{% endif %}
+{% endblock %}

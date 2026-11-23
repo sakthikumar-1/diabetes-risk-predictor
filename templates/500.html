@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Server Error (500) – GlucoShield{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 620px; margin: 4rem auto; text-align: center; padding: 3.5rem 2rem;">
+  <div
+    style="width: 80px; height: 80px; border-radius: 50%; background: var(--risk-high-bg); color: var(--risk-high); display: flex; align-items: center; justify-content: center; font-size: 2.25rem; margin: 0 auto 1.5rem;">
+    <i class="fas fa-triangle-exclamation"></i>
+  </div>
+  <div class="eyebrow" style="margin: 0 auto 0.75rem; background: var(--risk-high-bg); color: var(--risk-high);">Status
+    Code 500</div>
+  <h1 style="font-size: 2.25rem; font-weight: 800; margin-bottom: 0.5rem; letter-spacing: -0.03em;">
+    Diagnostic Service Interruption
+  </h1>
+  <p style="color: var(--text-secondary); font-size: 1rem; line-height: 1.6; margin-bottom: 2rem;">
+    The application encountered an unexpected internal condition while processing this request. Your data remains secure
+    in session.
+  </p>
+  <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+    <a class="btn btn-primary btn-lg" href="{{ url_for('index') }}">
+      <i class="fas fa-home"></i> Return to Home
+    </a>
+    <a class="btn btn-secondary btn-lg" href="{{ url_for('reset') }}">
+      <i class="fas fa-rotate-left"></i> Reset Session
+    </a>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+
+{% block title %}GlucoShield – Clinical AI Diabetes Risk Intelligence{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+  <div class="hero-copy">
+    <div class="eyebrow">
+      <i class="fas fa-sparkles"></i> Next-Gen Clinical AI Platform
+    </div>
+    <h1>
+      Intelligent <span class="highlight-text">Diabetes Risk</span> Stratification for Modern Care.
+    </h1>
+    <p class="subtitle">
+      Transform traditional diabetes screening into a fast, evidence-based clinical workflow. Evaluate patient biometrics, run machine-learning risk inference, and generate actionable care guidance in under 2 minutes.
+    </p>
+
+    <div class="cta-row">
+      <a class="btn btn-primary btn-lg" href="{{ url_for('assessment') }}">
+        <i class="fas fa-stethoscope"></i> Start Clinical Triage
+      </a>
+      <a class="btn btn-secondary btn-lg" href="{{ url_for('bulk_page') }}">
+        <i class="fas fa-file-csv"></i> Bulk Patient Upload
+      </a>
+    </div>
+
+    <div class="trust-row">
+      <span><i class="fas fa-shield-halved"></i> Privacy-First & Local Session</span>
+      <span><i class="fas fa-bolt"></i> 60-Sec Rapid Screening</span>
+      <span><i class="fas fa-file-medical"></i> Clinical PDF Reports</span>
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <div class="clinical-monitor-card">
+      <div class="monitor-header">
+        <div class="monitor-status-pulse">
+          <span class="pulse-dot"></span>
+          <span>Live Triage Engine</span>
+        </div>
+        <span class="monitor-mode-chip">ML Model Ready</span>
+      </div>
+
+      <div class="monitor-hero-metric">
+        <div class="monitor-score-label">Clinical Risk Index</div>
+        <div class="monitor-score-val" id="monitorHeroScore">18%</div>
+        <div style="margin-top: 0.5rem;">
+          <span class="live-triage-badge safe">
+            <i class="fas fa-check-circle"></i> Low Risk – Non-Diabetic
+          </span>
+        </div>
+      </div>
+
+      <!-- Animated SVG ECG Pulse Waveform -->
+      <svg class="monitor-ecg-canvas" viewBox="0 0 400 50" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="ecgGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#0284c7" stop-opacity="0.2" />
+            <stop offset="50%" stop-color="#0284c7" stop-opacity="1" />
+            <stop offset="100%" stop-color="#0d9488" stop-opacity="0.2" />
+          </linearGradient>
+        </defs>
+        <path d="M0,25 L90,25 L100,25 L110,10 L120,40 L130,20 L140,25 L210,25 L220,5 L230,45 L240,15 L250,25 L340,25 L350,15 L360,35 L370,25 L400,25" 
+              fill="none" stroke="url(#ecgGrad)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+
+      <div class="monitor-grid">
+        <div class="monitor-tile">
+          <div class="monitor-tile-label">Fasting Glucose</div>
+          <div class="monitor-tile-val">92 <small style="font-size: 0.75rem; font-weight: 500; color: var(--text-muted);">mg/dL</small></div>
+        </div>
+        <div class="monitor-tile">
+          <div class="monitor-tile-label">Calculated BMI</div>
+          <div class="monitor-tile-val">23.4 <small style="font-size: 0.75rem; font-weight: 500; color: var(--text-muted);">kg/m²</small></div>
+        </div>
+        <div class="monitor-tile">
+          <div class="monitor-tile-label">Blood Pressure</div>
+          <div class="monitor-tile-val">118/78 <small style="font-size: 0.75rem; font-weight: 500; color: var(--text-muted);">mmHg</small></div>
+        </div>
+        <div class="monitor-tile">
+          <div class="monitor-tile-label">Modifier Status</div>
+          <div class="monitor-tile-val" style="color: var(--risk-low); font-size: 1.05rem;">Optimal</div>
+        </div>
+      </div>
+
+      <div class="monitor-footer-bar">
+        <span><i class="fas fa-microscope"></i> Dual Ensemble ML Classifier</span>
+        <a href="{{ url_for('assessment') }}" style="color: var(--primary); font-weight: 700; font-size: 0.85rem;">
+          Run Assessment →
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Clinical Value Grid -->
+<section style="margin-top: 1rem; margin-bottom: 3.5rem;">
+  <div class="section-heading" style="text-align: center;">
+    <div class="eyebrow" style="margin: 0 auto 0.85rem;">Clinical Decision Architecture</div>
+    <h2>Engineered for Diagnostic Speed and Reliability</h2>
+    <p class="subtitle" style="margin: 0.5rem auto 0;">
+      A comprehensive platform designed for clinics, diagnostic centers, and health programs.
+    </p>
+  </div>
+
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="stat-icon"><i class="fas fa-bolt"></i></div>
+      <h3>Rapid Triage Screening</h3>
+      <p>Identify metabolic risk in seconds utilizing essential non-invasive biometrics: BMI, blood glucose, and age.</p>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon"><i class="fas fa-dna"></i></div>
+      <h3>Full Lab Investigation</h3>
+      <p>Evaluate insulin sensitivity, glucose tolerance, pedigree function, and pregnancy history for thorough clinical review.</p>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon"><i class="fas fa-list-check"></i></div>
+      <h3>Actionable Patient Plans</h3>
+      <p>Automate stratified follow-up recommendations grouped into High, Medium, and Low clinical priorities.</p>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon"><i class="fas fa-users"></i></div>
+      <h3>Population Bulk Upload</h3>
+      <p>Upload multi-patient CSV datasets for instant batch triage, population stratification, and instant download.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Workflow Progression -->
+<section class="card" style="margin-bottom: 3.5rem; background: var(--bg-surface-elevated);">
+  <div class="section-heading" style="margin-bottom: 1.5rem;">
+    <div class="eyebrow">Diagnostic Workflow</div>
+    <h2>How GlucoShield Works in Clinical Practice</h2>
+    <p class="subtitle">From initial intake to documentation in three simple steps.</p>
+  </div>
+
+  <div class="steps-grid">
+    <div class="step-box">
+      <span class="step-number-badge">STAGE 01</span>
+      <div class="feature-icon"><i class="fas fa-notes-medical"></i></div>
+      <h3>Patient Data Entry</h3>
+      <p>Input clinical measurements and optional lifestyle factors with automatic BMI computation and field validation.</p>
+    </div>
+
+    <div class="step-box">
+      <span class="step-number-badge">STAGE 02</span>
+      <div class="feature-icon"><i class="fas fa-brain"></i></div>
+      <h3>AI Diagnostic Inference</h3>
+      <p>Trained ML ensemble calculates risk probability and dynamically applies lifestyle and familial risk adjustments.</p>
+    </div>
+
+    <div class="step-box">
+      <span class="step-number-badge">STAGE 03</span>
+      <div class="feature-icon"><i class="fas fa-file-pdf"></i></div>
+      <h3>Care Plan & Documentation</h3>
+      <p>Review interactive analytics, examine biometric factors, and export patient-ready clinical PDF summaries.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Bottom CTA Banner -->
+<section class="card" style="text-align: center; padding: 3.5rem 2rem; background: linear-gradient(135deg, rgba(2, 132, 199, 0.08) 0%, rgba(13, 148, 136, 0.08) 100%); border-color: rgba(2, 132, 199, 0.25);">
+  <div class="eyebrow" style="margin: 0 auto 1rem;">Ready to Begin</div>
+  <h2 style="font-size: 2.25rem; font-weight: 800; margin-bottom: 0.75rem;">
+    Enhance Your Patient Diabetes Screening Today
+  </h2>
+  <p style="color: var(--text-secondary); max-width: 550px; margin: 0 auto 2rem; font-size: 1.05rem;">
+    No complex installation or setup required. Choose between a fast screening or a detailed clinical review.
+  </p>
+  <div class="cta-row" style="justify-content: center;">
+    <a class="btn btn-primary btn-lg" href="{{ url_for('assessment') }}">
+      <i class="fas fa-stethoscope"></i> Start Assessment Now
+    </a>
+    <a class="btn btn-secondary btn-lg" href="{{ url_for('dashboard') }}">
+      <i class="fas fa-chart-line"></i> View Operations Dashboard
+    </a>
+  </div>
+</section>
+{% endblock %}

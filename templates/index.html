@@ -1,183 +1,175 @@
 {% extends "base.html" %}
 
-{% block title %}GlucoShield – Clinical AI Diabetes Risk Intelligence{% endblock %}
+{% block title %}Diabetes Risk Predictor | Machine Learning Diagnostic Intelligence{% endblock %}
 
 {% block content %}
 <!-- Hero Section -->
 <section class="hero">
   <div class="hero-copy">
     <div class="eyebrow">
-      <i class="fas fa-sparkles"></i> Next-Gen Clinical AI Platform
+      <i class="fas fa-sparkles"></i> Dual Ensemble Machine Learning
     </div>
     <h1>
-      Intelligent <span class="highlight-text">Diabetes Risk</span> Stratification for Modern Care.
+      Predict Diabetes Risk With <span class="text-gradient">Machine-Learned</span> Precision.
     </h1>
     <p class="subtitle">
-      Transform traditional diabetes screening into a fast, evidence-based clinical workflow. Evaluate patient biometrics, run machine-learning risk inference, and generate actionable care guidance in under 2 minutes.
+      A high-precision predictive diagnostic platform combining scikit-learn ensemble models, multi-factor risk modifiers, and automated clinical guidance to deliver actionable metabolic assessments in seconds.
     </p>
 
     <div class="cta-row">
       <a class="btn btn-primary btn-lg" href="{{ url_for('assessment') }}">
-        <i class="fas fa-stethoscope"></i> Start Clinical Triage
+        <i class="fas fa-bolt"></i> Run Risk Assessment
       </a>
       <a class="btn btn-secondary btn-lg" href="{{ url_for('bulk_page') }}">
-        <i class="fas fa-file-csv"></i> Bulk Patient Upload
+        <i class="fas fa-file-csv"></i> Batch Population CSV
       </a>
     </div>
 
-    <div class="trust-row">
-      <span><i class="fas fa-shield-halved"></i> Privacy-First & Local Session</span>
-      <span><i class="fas fa-bolt"></i> 60-Sec Rapid Screening</span>
-      <span><i class="fas fa-file-medical"></i> Clinical PDF Reports</span>
+    <div class="tech-stack-row">
+      <span><i class="fas fa-microchip"></i> Scikit-Learn Ensemble</span>
+      <span><i class="fas fa-bolt"></i> 60s Fast Triage</span>
+      <span><i class="fas fa-shield-halved"></i> 100% Client Session Privacy</span>
+      <span><i class="fas fa-file-pdf"></i> PDF Care Plans</span>
     </div>
   </div>
 
   <div class="hero-visual">
-    <div class="clinical-monitor-card">
+    <div class="cyber-monitor-card">
       <div class="monitor-header">
-        <div class="monitor-status-pulse">
-          <span class="pulse-dot"></span>
-          <span>Live Triage Engine</span>
+        <div class="pulse-indicator">
+          <span class="neon-dot"></span>
+          <span>Inference Engine Active</span>
         </div>
-        <span class="monitor-mode-chip">ML Model Ready</span>
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--neon-cyan); background: rgba(0, 242, 254, 0.1); padding: 0.2rem 0.6rem; border-radius: var(--radius-full);">
+          PIMA Trained
+        </span>
       </div>
 
-      <div class="monitor-hero-metric">
-        <div class="monitor-score-label">Clinical Risk Index</div>
-        <div class="monitor-score-val" id="monitorHeroScore">18%</div>
-        <div style="margin-top: 0.5rem;">
-          <span class="live-triage-badge safe">
-            <i class="fas fa-check-circle"></i> Low Risk – Non-Diabetic
+      <div class="monitor-score-block">
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.1em; margin-bottom: 0.4rem;">
+          Computed Metabolic Risk
+        </div>
+        <div class="monitor-score-val">18.4%</div>
+        <div style="margin-top: 0.65rem;">
+          <span style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.35rem 0.95rem; border-radius: var(--radius-full); font-size: 0.8rem; font-weight: 700; background: var(--status-low-bg); color: var(--status-low); border: 1px solid var(--status-low-border); box-shadow: 0 0 15px var(--status-low-glow);">
+            <i class="fas fa-circle-check"></i> Low Risk – Non-Diabetic
           </span>
         </div>
       </div>
 
-      <!-- Animated SVG ECG Pulse Waveform -->
-      <svg class="monitor-ecg-canvas" viewBox="0 0 400 50" preserveAspectRatio="none">
-        <defs>
-          <linearGradient id="ecgGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stop-color="#0284c7" stop-opacity="0.2" />
-            <stop offset="50%" stop-color="#0284c7" stop-opacity="1" />
-            <stop offset="100%" stop-color="#0d9488" stop-opacity="0.2" />
-          </linearGradient>
-        </defs>
-        <path d="M0,25 L90,25 L100,25 L110,10 L120,40 L130,20 L140,25 L210,25 L220,5 L230,45 L240,15 L250,25 L340,25 L350,15 L360,35 L370,25 L400,25" 
-              fill="none" stroke="url(#ecgGrad)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
-      </svg>
-
       <div class="monitor-grid">
         <div class="monitor-tile">
           <div class="monitor-tile-label">Fasting Glucose</div>
-          <div class="monitor-tile-val">92 <small style="font-size: 0.75rem; font-weight: 500; color: var(--text-muted);">mg/dL</small></div>
+          <div class="monitor-tile-val">92 <small style="font-size: 0.75rem; color: var(--text-muted);">mg/dL</small></div>
         </div>
         <div class="monitor-tile">
-          <div class="monitor-tile-label">Calculated BMI</div>
-          <div class="monitor-tile-val">23.4 <small style="font-size: 0.75rem; font-weight: 500; color: var(--text-muted);">kg/m²</small></div>
+          <div class="monitor-tile-label">Computed BMI</div>
+          <div class="monitor-tile-val">23.2 <small style="font-size: 0.75rem; color: var(--text-muted);">kg/m²</small></div>
         </div>
         <div class="monitor-tile">
           <div class="monitor-tile-label">Blood Pressure</div>
-          <div class="monitor-tile-val">118/78 <small style="font-size: 0.75rem; font-weight: 500; color: var(--text-muted);">mmHg</small></div>
+          <div class="monitor-tile-val">118/76 <small style="font-size: 0.75rem; color: var(--text-muted);">mmHg</small></div>
         </div>
         <div class="monitor-tile">
-          <div class="monitor-tile-label">Modifier Status</div>
-          <div class="monitor-tile-val" style="color: var(--risk-low); font-size: 1.05rem;">Optimal</div>
+          <div class="monitor-tile-label">Model Confidence</div>
+          <div class="monitor-tile-val" style="color: var(--neon-cyan);">96.2%</div>
         </div>
       </div>
 
-      <div class="monitor-footer-bar">
-        <span><i class="fas fa-microscope"></i> Dual Ensemble ML Classifier</span>
-        <a href="{{ url_for('assessment') }}" style="color: var(--primary); font-weight: 700; font-size: 0.85rem;">
-          Run Assessment →
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid var(--border-light); font-size: 0.8rem; color: var(--text-secondary);">
+        <span><i class="fas fa-terminal" style="color: var(--neon-cyan); margin-right: 0.35rem;"></i> Random Forest + Logistic Reg</span>
+        <a href="{{ url_for('assessment') }}" style="color: var(--neon-cyan); font-weight: 700;">
+          Launch Tool →
         </a>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Clinical Value Grid -->
-<section style="margin-top: 1rem; margin-bottom: 3.5rem;">
+<!-- Core Engineering Highlights -->
+<section style="margin-bottom: 4rem;">
   <div class="section-heading" style="text-align: center;">
-    <div class="eyebrow" style="margin: 0 auto 0.85rem;">Clinical Decision Architecture</div>
-    <h2>Engineered for Diagnostic Speed and Reliability</h2>
+    <div class="eyebrow" style="margin: 0 auto 0.75rem;">System Architecture</div>
+    <h2>Engineered For Diagnostic Speed & Impact</h2>
     <p class="subtitle" style="margin: 0.5rem auto 0;">
-      A comprehensive platform designed for clinics, diagnostic centers, and health programs.
+      A modular full-stack machine learning architecture built with Flask, scikit-learn, and high-performance frontend interfaces.
     </p>
   </div>
 
   <div class="stat-grid">
     <div class="stat-card">
       <div class="stat-icon"><i class="fas fa-bolt"></i></div>
-      <h3>Rapid Triage Screening</h3>
-      <p>Identify metabolic risk in seconds utilizing essential non-invasive biometrics: BMI, blood glucose, and age.</p>
+      <h3>Rapid Triage Model</h3>
+      <p>Instant metabolic inference using core non-invasive parameters: Fasting Glucose, Body Mass Index, and Patient Age.</p>
     </div>
 
     <div class="stat-card">
       <div class="stat-icon"><i class="fas fa-dna"></i></div>
-      <h3>Full Lab Investigation</h3>
-      <p>Evaluate insulin sensitivity, glucose tolerance, pedigree function, and pregnancy history for thorough clinical review.</p>
+      <h3>Full Clinical Panel</h3>
+      <p>Complete 8-biomarker diagnostic review integrating Insulin sensitivity, Blood Pressure, Skinfold, and Diabetes Pedigree Function.</p>
     </div>
 
     <div class="stat-card">
-      <div class="stat-icon"><i class="fas fa-list-check"></i></div>
-      <h3>Actionable Patient Plans</h3>
-      <p>Automate stratified follow-up recommendations grouped into High, Medium, and Low clinical priorities.</p>
+      <div class="stat-icon"><i class="fas fa-chart-pie"></i></div>
+      <h3>Factor Decomposition</h3>
+      <p>Visual explanation displaying biometric contribution percentages, radar profiles, and comparative laboratory reference ranges.</p>
     </div>
 
     <div class="stat-card">
-      <div class="stat-icon"><i class="fas fa-users"></i></div>
-      <h3>Population Bulk Upload</h3>
-      <p>Upload multi-patient CSV datasets for instant batch triage, population stratification, and instant download.</p>
+      <div class="stat-icon"><i class="fas fa-layer-group"></i></div>
+      <h3>Population Batch Streamer</h3>
+      <p>Process multi-patient CSV datasets at scale with asynchronous parsing, format verification, and instant batch risk CSV download.</p>
     </div>
   </div>
 </section>
 
-<!-- Workflow Progression -->
-<section class="card" style="margin-bottom: 3.5rem; background: var(--bg-surface-elevated);">
-  <div class="section-heading" style="margin-bottom: 1.5rem;">
-    <div class="eyebrow">Diagnostic Workflow</div>
-    <h2>How GlucoShield Works in Clinical Practice</h2>
-    <p class="subtitle">From initial intake to documentation in three simple steps.</p>
+<!-- 3-Stage Pipeline -->
+<section class="card" style="margin-bottom: 4rem; border-color: rgba(99, 102, 241, 0.25);">
+  <div class="section-heading" style="margin-bottom: 2rem;">
+    <div class="eyebrow">Diagnostic Flow</div>
+    <h2>How The Prediction Pipeline Works</h2>
+    <p class="subtitle">From raw biometric intake to stratified patient care plans.</p>
   </div>
 
   <div class="steps-grid">
     <div class="step-box">
-      <span class="step-number-badge">STAGE 01</span>
-      <div class="feature-icon"><i class="fas fa-notes-medical"></i></div>
-      <h3>Patient Data Entry</h3>
-      <p>Input clinical measurements and optional lifestyle factors with automatic BMI computation and field validation.</p>
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--neon-cyan); font-weight: 700; margin-bottom: 0.5rem; display: block;">STAGE 01</span>
+      <div class="feature-icon"><i class="fas fa-input-numeric"></i></div>
+      <h3>Biometric Intake</h3>
+      <p>Input patient biometrics with real-time field validation, range alerts, and automated BMI calculation.</p>
     </div>
 
     <div class="step-box">
-      <span class="step-number-badge">STAGE 02</span>
-      <div class="feature-icon"><i class="fas fa-brain"></i></div>
-      <h3>AI Diagnostic Inference</h3>
-      <p>Trained ML ensemble calculates risk probability and dynamically applies lifestyle and familial risk adjustments.</p>
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--neon-violet); font-weight: 700; margin-bottom: 0.5rem; display: block;">STAGE 02</span>
+      <div class="feature-icon" style="background: rgba(139, 92, 246, 0.12); color: var(--neon-purple); border-color: rgba(139, 92, 246, 0.3);"><i class="fas fa-brain"></i></div>
+      <h3>Model Inference</h3>
+      <p>Ensemble ML model computes risk probability and adjusts for lifestyle risk modifiers and family pedigree.</p>
     </div>
 
     <div class="step-box">
-      <span class="step-number-badge">STAGE 03</span>
-      <div class="feature-icon"><i class="fas fa-file-pdf"></i></div>
-      <h3>Care Plan & Documentation</h3>
-      <p>Review interactive analytics, examine biometric factors, and export patient-ready clinical PDF summaries.</p>
+      <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--status-low); font-weight: 700; margin-bottom: 0.5rem; display: block;">STAGE 03</span>
+      <div class="feature-icon" style="background: var(--status-low-bg); color: var(--status-low); border-color: var(--status-low-border);"><i class="fas fa-file-pdf"></i></div>
+      <h3>Diagnostic Report</h3>
+      <p>Review interactive gauge visualizer, factor impact breakdowns, and generate publication-ready PDF reports.</p>
     </div>
   </div>
 </section>
 
 <!-- Bottom CTA Banner -->
-<section class="card" style="text-align: center; padding: 3.5rem 2rem; background: linear-gradient(135deg, rgba(2, 132, 199, 0.08) 0%, rgba(13, 148, 136, 0.08) 100%); border-color: rgba(2, 132, 199, 0.25);">
-  <div class="eyebrow" style="margin: 0 auto 1rem;">Ready to Begin</div>
-  <h2 style="font-size: 2.25rem; font-weight: 800; margin-bottom: 0.75rem;">
-    Enhance Your Patient Diabetes Screening Today
+<section class="card" style="text-align: center; padding: 3.5rem 2rem; background: radial-gradient(circle at center, rgba(139, 92, 246, 0.12) 0%, var(--bg-surface) 75%); border-color: rgba(139, 92, 246, 0.3); box-shadow: 0 0 40px rgba(139, 92, 246, 0.15);">
+  <div class="eyebrow" style="margin: 0 auto 1rem;">Ready To Evaluate</div>
+  <h2 style="font-size: 2.35rem; font-weight: 800; margin-bottom: 0.75rem;">
+    Experience Next-Generation Metabolic Intelligence
   </h2>
-  <p style="color: var(--text-secondary); max-width: 550px; margin: 0 auto 2rem; font-size: 1.05rem;">
-    No complex installation or setup required. Choose between a fast screening or a detailed clinical review.
+  <p style="color: var(--text-secondary); max-width: 580px; margin: 0 auto 2rem; font-size: 1.05rem;">
+    Choose between a rapid 60-second triage check or an in-depth clinical review of all 8 laboratory parameters.
   </p>
   <div class="cta-row" style="justify-content: center;">
     <a class="btn btn-primary btn-lg" href="{{ url_for('assessment') }}">
-      <i class="fas fa-stethoscope"></i> Start Assessment Now
+      <i class="fas fa-bolt"></i> Start Single Assessment
     </a>
     <a class="btn btn-secondary btn-lg" href="{{ url_for('dashboard') }}">
-      <i class="fas fa-chart-line"></i> View Operations Dashboard
+      <i class="fas fa-chart-line"></i> View System Dashboard
     </a>
   </div>
 </section>

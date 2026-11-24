@@ -1,26 +1,26 @@
 {% extends "base.html" %}
 
-{% block title %}Clinical Operations Dashboard – GlucoShield{% endblock %}
+{% block title %}System Telemetry & Operations | Diabetes Risk Predictor{% endblock %}
 
 {% block content %}
-<div style="max-width: 1200px; margin: 0 auto;">
-  <!-- Dashboard Header -->
-  <div class="section-heading" style="display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem; margin-bottom: 2rem;">
+<div style="max-width: 1200px; margin: 0 auto 3rem;">
+  <!-- Dashboard Top Banner -->
+  <div class="section-heading" style="display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem; margin-bottom: 2.5rem;">
     <div>
-      <div class="eyebrow" style="margin-bottom: 0.4rem;">
-        <i class="fas fa-chart-line"></i> Operations Command
+      <div class="eyebrow" style="margin-bottom: 0.5rem;">
+        <i class="fas fa-chart-line"></i> Operations & Telemetry
       </div>
-      <h1 style="font-size: 2.15rem; font-weight: 800; letter-spacing: -0.03em;">
-        Clinical Operations & Screening Intelligence
+      <h1 style="font-size: 2.25rem; font-weight: 800; letter-spacing: -0.03em;">
+        System Telemetry & Model Analytics
       </h1>
       <p class="subtitle" style="margin-top: 0.25rem;">
-        Real-time monitoring of screening volumes, metabolic risk distributions, and clinical diagnostic pipeline status.
+        Real-time telemetry monitoring of ML inference throughput, population risk stratifications, and pipeline status.
       </p>
     </div>
 
-    <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+    <div style="display: flex; gap: 0.85rem; flex-wrap: wrap;">
       <a href="{{ url_for('assessment') }}" class="btn btn-primary">
-        <i class="fas fa-plus"></i> New Patient Triage
+        <i class="fas fa-bolt"></i> New Assessment
       </a>
       <a href="{{ url_for('bulk_page') }}" class="btn btn-secondary">
         <i class="fas fa-file-csv"></i> Batch Intake
@@ -28,85 +28,97 @@
     </div>
   </div>
 
-  <!-- KPI Cards Row -->
-  <div class="dashboard-kpi-row">
-    <div class="dashboard-kpi-card">
-      <div class="kpi-icon" style="background: var(--primary-light); color: var(--primary);">
+  <!-- 4 KPI Cards -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+    <div class="panel" style="display: flex; align-items: center; gap: 1.25rem;">
+      <div style="width: 52px; height: 52px; border-radius: var(--radius-md); background: rgba(0, 242, 254, 0.1); color: var(--neon-cyan); border: 1px solid rgba(0, 242, 254, 0.3); display: flex; align-items: center; justify-content: center; font-size: 1.35rem;">
         <i class="fas fa-users-viewfinder"></i>
       </div>
-      <div class="kpi-info-block">
-        <div class="kpi-label">Total Screenings</div>
-        <div class="kpi-number">3,482</div>
-        <div style="font-size: 0.75rem; color: var(--risk-low); font-weight: 600; margin-top: 0.25rem;">
-          <i class="fas fa-arrow-up"></i> +14.2% vs last month
+      <div>
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.725rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted);">
+          Total Screenings
+        </div>
+        <div style="font-size: 1.85rem; font-weight: 800; color: var(--text-primary); line-height: 1.1; margin-top: 0.2rem;">
+          3,482
+        </div>
+        <div style="font-size: 0.75rem; color: var(--status-low); font-weight: 600; margin-top: 0.25rem;">
+          <i class="fas fa-arrow-trend-up"></i> +14.2% this month
         </div>
       </div>
     </div>
 
-    <div class="dashboard-kpi-card">
-      <div class="kpi-icon" style="background: var(--risk-mod-bg); color: var(--risk-mod);">
+    <div class="panel" style="display: flex; align-items: center; gap: 1.25rem;">
+      <div style="width: 52px; height: 52px; border-radius: var(--radius-md); background: var(--status-mod-bg); color: var(--status-mod); border: 1px solid var(--status-mod-border); display: flex; align-items: center; justify-content: center; font-size: 1.35rem;">
         <i class="fas fa-triangle-exclamation"></i>
       </div>
-      <div class="kpi-info-block">
-        <div class="kpi-label">Pre-Diabetes Rate</div>
-        <div class="kpi-number">23.8%</div>
-        <div style="font-size: 0.75rem; color: var(--risk-mod); font-weight: 600; margin-top: 0.25rem;">
+      <div>
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.725rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted);">
+          Pre-Diabetes Rate
+        </div>
+        <div style="font-size: 1.85rem; font-weight: 800; color: var(--text-primary); line-height: 1.1; margin-top: 0.2rem;">
+          23.8%
+        </div>
+        <div style="font-size: 0.75rem; color: var(--status-mod); font-weight: 600; margin-top: 0.25rem;">
           Early intervention flagged
         </div>
       </div>
     </div>
 
-    <div class="dashboard-kpi-card">
-      <div class="kpi-icon" style="background: var(--risk-high-bg); color: var(--risk-high);">
-        <i class="fas fa-bell"></i>
+    <div class="panel" style="display: flex; align-items: center; gap: 1.25rem;">
+      <div style="width: 52px; height: 52px; border-radius: var(--radius-md); background: var(--status-high-bg); color: var(--status-high); border: 1px solid var(--status-high-border); display: flex; align-items: center; justify-content: center; font-size: 1.35rem;">
+        <i class="fas fa-circle-exclamation"></i>
       </div>
-      <div class="kpi-info-block">
-        <div class="kpi-label">High-Risk Stratified</div>
-        <div class="kpi-number">14.4%</div>
-        <div style="font-size: 0.75rem; color: var(--risk-high); font-weight: 600; margin-top: 0.25rem;">
-          Priority care triggered
+      <div>
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.725rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted);">
+          High-Risk Rate
+        </div>
+        <div style="font-size: 1.85rem; font-weight: 800; color: var(--text-primary); line-height: 1.1; margin-top: 0.2rem;">
+          14.4%
+        </div>
+        <div style="font-size: 0.75rem; color: var(--status-high); font-weight: 600; margin-top: 0.25rem;">
+          Immediate review alerted
         </div>
       </div>
     </div>
 
-    <div class="dashboard-kpi-card">
-      <div class="kpi-icon" style="background: var(--risk-low-bg); color: var(--risk-low);">
+    <div class="panel" style="display: flex; align-items: center; gap: 1.25rem;">
+      <div style="width: 52px; height: 52px; border-radius: var(--radius-md); background: rgba(139, 92, 246, 0.12); color: var(--neon-purple); border: 1px solid rgba(139, 92, 246, 0.3); display: flex; align-items: center; justify-content: center; font-size: 1.35rem;">
         <i class="fas fa-shield-check"></i>
       </div>
-      <div class="kpi-info-block">
-        <div class="kpi-label">Diagnostic Accuracy</div>
-        <div class="kpi-number">95.6%</div>
-        <div style="font-size: 0.75rem; color: var(--risk-low); font-weight: 600; margin-top: 0.25rem;">
-          Ensemble model validation
+      <div>
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.725rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted);">
+          Ensemble Accuracy
+        </div>
+        <div style="font-size: 1.85rem; font-weight: 800; color: var(--text-primary); line-height: 1.1; margin-top: 0.2rem;">
+          95.6%
+        </div>
+        <div style="font-size: 0.75rem; color: var(--neon-cyan); font-weight: 600; margin-top: 0.25rem;">
+          Cross-validated model
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Operational Charts Grid -->
+  <!-- Operational Charts -->
   <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.75rem; margin-bottom: 2rem;">
-    <!-- Risk Stratification Breakdown -->
     <div class="card" style="padding: 1.75rem;">
       <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
-        <h3 style="font-size: 1.1rem; font-weight: 700; color: var(--text-main);">
-          <i class="fas fa-chart-pie" style="color: var(--primary); margin-right: 0.4rem;"></i>
-          Risk Stratification Breakdown
+        <h3 style="font-size: 1.1rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem;">
+          <i class="fas fa-chart-pie" style="color: var(--neon-cyan);"></i> Risk Stratification Distribution
         </h3>
-        <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">Cohort Aggregation</span>
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-muted);">Cumulative</span>
       </div>
       <div style="height: 240px; position: relative;">
         <canvas id="riskDistributionChart"></canvas>
       </div>
     </div>
 
-    <!-- Screening Volume Throughput -->
     <div class="card" style="padding: 1.75rem;">
       <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
-        <h3 style="font-size: 1.1rem; font-weight: 700; color: var(--text-main);">
-          <i class="fas fa-chart-column" style="color: var(--primary); margin-right: 0.4rem;"></i>
-          Weekly Screening Volume
+        <h3 style="font-size: 1.1rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem;">
+          <i class="fas fa-chart-column" style="color: var(--neon-purple);"></i> Weekly Screening Throughput
         </h3>
-        <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">Last 7 Days</span>
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-muted);">Last 7 Days</span>
       </div>
       <div style="height: 240px; position: relative;">
         <canvas id="screeningThroughputChart"></canvas>
@@ -114,127 +126,120 @@
     </div>
   </div>
 
-  <!-- Pipeline Health & Operational Services -->
+  <!-- Engine Pipeline Status -->
   <div class="card" style="padding: 1.75rem; margin-bottom: 2rem;">
     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
-      <h3 style="font-size: 1.1rem; font-weight: 700; color: var(--text-main);">
-        <i class="fas fa-server" style="color: var(--primary); margin-right: 0.4rem;"></i>
-        Diagnostic Engine Pipeline Health
+      <h3 style="font-size: 1.1rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem;">
+        <i class="fas fa-server" style="color: var(--neon-cyan);"></i> Inference Engine Pipeline Health
       </h3>
-      <span class="pulse-dot"></span>
+      <span class="pulse-indicator">
+        <span class="neon-dot"></span> Online
+      </span>
     </div>
 
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
       <div style="padding: 1rem; background: var(--bg-surface-elevated); border-radius: var(--radius-md); border: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between;">
         <div>
-          <strong style="display: block; font-size: 0.9rem; color: var(--text-main);">Quick Triage Model</strong>
-          <small style="color: var(--text-muted);">scikit-learn ensemble</small>
+          <strong style="display: block; font-size: 0.9rem; color: var(--text-primary);">Quick Triage Model</strong>
+          <small style="color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">Logistic Regression</small>
         </div>
-        <span class="status-badge-sm ok"><i class="fas fa-check"></i> Operational</span>
+        <span style="font-size: 0.75rem; font-weight: 700; color: var(--status-low); background: var(--status-low-bg); padding: 0.2rem 0.6rem; border-radius: var(--radius-full);">
+          Ready
+        </span>
       </div>
 
       <div style="padding: 1rem; background: var(--bg-surface-elevated); border-radius: var(--radius-md); border: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between;">
         <div>
-          <strong style="display: block; font-size: 0.9rem; color: var(--text-main);">Full Diagnostic Model</strong>
-          <small style="color: var(--text-muted);">8-parameter classifier</small>
+          <strong style="display: block; font-size: 0.9rem; color: var(--text-primary);">Full Diagnostic Model</strong>
+          <small style="color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">Random Forest Ensemble</small>
         </div>
-        <span class="status-badge-sm ok"><i class="fas fa-check"></i> Operational</span>
+        <span style="font-size: 0.75rem; font-weight: 700; color: var(--status-low); background: var(--status-low-bg); padding: 0.2rem 0.6rem; border-radius: var(--radius-full);">
+          Ready
+        </span>
       </div>
 
       <div style="padding: 1rem; background: var(--bg-surface-elevated); border-radius: var(--radius-md); border: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between;">
         <div>
-          <strong style="display: block; font-size: 0.9rem; color: var(--text-main);">Population Batch Streamer</strong>
-          <small style="color: var(--text-muted);">Async CSV parser</small>
+          <strong style="display: block; font-size: 0.9rem; color: var(--text-primary);">Batch CSV Processor</strong>
+          <small style="color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">Async Streamer</small>
         </div>
-        <span class="status-badge-sm ok"><i class="fas fa-check"></i> Ready</span>
+        <span style="font-size: 0.75rem; font-weight: 700; color: var(--status-low); background: var(--status-low-bg); padding: 0.2rem 0.6rem; border-radius: var(--radius-full);">
+          Ready
+        </span>
       </div>
 
       <div style="padding: 1rem; background: var(--bg-surface-elevated); border-radius: var(--radius-md); border: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between;">
         <div>
-          <strong style="display: block; font-size: 0.9rem; color: var(--text-main);">Report Generation</strong>
-          <small style="color: var(--text-muted);">ReportLab PDF Engine</small>
+          <strong style="display: block; font-size: 0.9rem; color: var(--text-primary);">Report Generator</strong>
+          <small style="color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">ReportLab PDF Engine</small>
         </div>
-        <span class="status-badge-sm ok"><i class="fas fa-check"></i> Ready</span>
+        <span style="font-size: 0.75rem; font-weight: 700; color: var(--status-low); background: var(--status-low-bg); padding: 0.2rem 0.6rem; border-radius: var(--radius-full);">
+          Ready
+        </span>
       </div>
     </div>
   </div>
 
-  <!-- Recent Patient Intake Simulation Feed -->
+  <!-- Recent Intake Feed -->
   <div class="card" style="padding: 1.75rem;">
     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
-      <div>
-        <h3 style="font-size: 1.1rem; font-weight: 700; color: var(--text-main);">
-          <i class="fas fa-clipboard-user" style="color: var(--primary); margin-right: 0.4rem;"></i>
-          Recent Patient Intake Activity
-        </h3>
-        <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.2rem;">
-          Clinical triage events processed in this operational environment.
-        </p>
-      </div>
-
+      <h3 style="font-size: 1.1rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem;">
+        <i class="fas fa-clipboard-user" style="color: var(--neon-cyan);"></i> Recent Triage Records
+      </h3>
       <a href="{{ url_for('assessment') }}" class="btn btn-outline btn-sm">
-        <i class="fas fa-plus"></i> Intake New Patient
+        <i class="fas fa-plus"></i> New Assessment
       </a>
     </div>
 
-    <div class="table-glass-wrap">
-      <table class="clinical-data-table">
+    <div class="analytics-table-wrap">
+      <table class="cyber-table">
         <thead>
           <tr>
             <th>Patient ID</th>
-            <th>Evaluation Mode</th>
+            <th>Mode</th>
             <th>Glucose</th>
             <th>BMI</th>
             <th>Age</th>
-            <th>Risk Score</th>
-            <th>Triage Tier</th>
+            <th>Calculated Risk</th>
+            <th>Triage Stratification</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td><strong>#PT-8941</strong></td>
-            <td><span class="status-badge-sm ok">Quick Triage</span></td>
+            <td><strong style="font-family: 'JetBrains Mono', monospace;">#PT-9042</strong></td>
+            <td><span style="color: var(--neon-cyan); font-weight: 700;">Quick</span></td>
             <td>94 mg/dL</td>
-            <td>23.8</td>
+            <td>23.8 kg/m²</td>
             <td>42 yrs</td>
-            <td><strong style="color: var(--risk-low);">18.2%</strong></td>
-            <td><span class="live-triage-badge safe" style="font-size: 0.75rem;">Low Risk</span></td>
+            <td><strong style="color: var(--status-low); font-family: 'JetBrains Mono', monospace;">18.2%</strong></td>
+            <td><span style="color: var(--status-low); font-weight: 700;">Low Risk</span></td>
           </tr>
           <tr>
-            <td><strong>#PT-8940</strong></td>
-            <td><span class="status-badge-sm warn">Full Panel</span></td>
-            <td>138 mg/dL</td>
-            <td>31.2</td>
+            <td><strong style="font-family: 'JetBrains Mono', monospace;">#PT-9041</strong></td>
+            <td><span style="color: var(--neon-purple); font-weight: 700;">Full Panel</span></td>
+            <td>142 mg/dL</td>
+            <td>31.5 kg/m²</td>
             <td>56 yrs</td>
-            <td><strong style="color: var(--risk-high);">82.6%</strong></td>
-            <td><span class="live-triage-badge danger" style="font-size: 0.75rem;">High Risk</span></td>
+            <td><strong style="color: var(--status-high); font-family: 'JetBrains Mono', monospace;">84.5%</strong></td>
+            <td><span style="color: var(--status-high); font-weight: 700;">High Risk</span></td>
           </tr>
           <tr>
-            <td><strong>#PT-8939</strong></td>
-            <td><span class="status-badge-sm ok">Quick Triage</span></td>
-            <td>114 mg/dL</td>
-            <td>27.4</td>
+            <td><strong style="font-family: 'JetBrains Mono', monospace;">#PT-9040</strong></td>
+            <td><span style="color: var(--neon-cyan); font-weight: 700;">Quick</span></td>
+            <td>112 mg/dL</td>
+            <td>27.2 kg/m²</td>
             <td>49 yrs</td>
-            <td><strong style="color: var(--risk-mod);">48.0%</strong></td>
-            <td><span class="live-triage-badge warning" style="font-size: 0.75rem;">Moderate Risk</span></td>
+            <td><strong style="color: var(--status-mod); font-family: 'JetBrains Mono', monospace;">46.8%</strong></td>
+            <td><span style="color: var(--status-mod); font-weight: 700;">Moderate Risk</span></td>
           </tr>
           <tr>
-            <td><strong>#PT-8938</strong></td>
-            <td><span class="status-badge-sm warn">Full Panel</span></td>
+            <td><strong style="font-family: 'JetBrains Mono', monospace;">#PT-9039</strong></td>
+            <td><span style="color: var(--neon-purple); font-weight: 700;">Full Panel</span></td>
             <td>88 mg/dL</td>
-            <td>21.5</td>
-            <td>34 yrs</td>
-            <td><strong style="color: var(--risk-low);">12.5%</strong></td>
-            <td><span class="live-triage-badge safe" style="font-size: 0.75rem;">Low Risk</span></td>
-          </tr>
-          <tr>
-            <td><strong>#PT-8937</strong></td>
-            <td><span class="status-badge-sm ok">Quick Triage</span></td>
-            <td>162 mg/dL</td>
-            <td>29.1</td>
-            <td>61 yrs</td>
-            <td><strong style="color: var(--risk-high);">89.4%</strong></td>
-            <td><span class="live-triage-badge danger" style="font-size: 0.75rem;">High Risk</span></td>
+            <td>21.4 kg/m²</td>
+            <td>33 yrs</td>
+            <td><strong style="color: var(--status-low); font-family: 'JetBrains Mono', monospace;">11.8%</strong></td>
+            <td><span style="color: var(--status-low); font-weight: 700;">Low Risk</span></td>
           </tr>
         </tbody>
       </table>
@@ -246,11 +251,11 @@
 {% block scripts %}
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    const isDark = document.documentElement.classList.contains('dark');
-    const textColor = isDark ? '#cbd5e1' : '#475569';
-    const gridColor = isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.06)';
+    const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+    const textColor = isLight ? '#475569' : '#cbd5e1';
+    const gridColor = isLight ? 'rgba(0, 0, 0, 0.06)' : 'rgba(255, 255, 255, 0.06)';
 
-    // 1. Doughnut Chart: Risk Distribution
+    // 1. Doughnut Chart
     const distCanvas = document.getElementById('riskDistributionChart');
     if (distCanvas) {
       new Chart(distCanvas.getContext('2d'), {
@@ -259,7 +264,7 @@
           labels: ['Low Risk (Optimal)', 'Pre-Diabetic (Moderate)', 'High Risk (Diabetic)'],
           datasets: [{
             data: [61.8, 23.8, 14.4],
-            backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
+            backgroundColor: ['#10b981', '#f59e0b', '#f43f5e'],
             borderWidth: 0,
             hoverOffset: 6
           }]
@@ -272,8 +277,8 @@
               position: 'bottom',
               labels: {
                 color: textColor,
-                font: { family: 'Plus Jakarta Sans', size: 12, weight: '600' },
-                padding: 16
+                font: { family: 'Plus Jakarta Sans', size: 11, weight: '600' },
+                padding: 14
               }
             }
           },
@@ -282,7 +287,7 @@
       });
     }
 
-    // 2. Bar Chart: Weekly Throughput
+    // 2. Bar Chart
     const volCanvas = document.getElementById('screeningThroughputChart');
     if (volCanvas) {
       new Chart(volCanvas.getContext('2d'), {
@@ -292,9 +297,8 @@
           datasets: [{
             label: 'Screenings',
             data: [142, 185, 210, 195, 230, 98, 75],
-            backgroundColor: '#0284c7',
-            borderRadius: 6,
-            borderSkipped: false
+            backgroundColor: '#00f2fe',
+            borderRadius: 6
           }]
         },
         options: {

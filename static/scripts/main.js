@@ -1,137 +1,137 @@
 /**
- * GlucoShield - Main Interactive Logic
+ * Diabetes Risk Predictor – Cyber & Obsidian Interaction Scripts
  */
 document.addEventListener('DOMContentLoaded', function () {
-  // 1. Theme Management (Sync with localStorage and system preference)
+  // 1. Theme Management (Obsidian Dark is Default)
   const themeToggle = document.getElementById('themeToggle');
   const themeIcon = document.getElementById('themeIcon');
   const root = document.documentElement;
 
-  function updateThemeUI(theme) {
+  function applyTheme(theme) {
     root.setAttribute('data-theme', theme);
-    if (theme === 'dark') {
-      root.classList.add('dark');
-      if (themeIcon) themeIcon.className = 'fas fa-sun';
-    } else {
-      root.classList.remove('dark');
-      if (themeIcon) themeIcon.className = 'fas fa-moon';
+    if (themeIcon) {
+      themeIcon.className = theme === 'light' ? 'fas fa-sun' : 'fas fa-moon';
     }
     try {
       localStorage.setItem('theme', theme);
-    } catch (e) {
-      // Ignore localStorage restrictions
-    }
+    } catch (e) {}
   }
 
-  // Detect current theme on load
-  const initialTheme = root.getAttribute('data-theme') || localStorage.getItem('theme') || 'light';
-  updateThemeUI(initialTheme);
+  const savedTheme = localStorage.getItem('theme') || 'dark';
+  applyTheme(savedTheme);
 
   if (themeToggle) {
-    themeToggle.addEventListener('click', function () {
-      const current = root.getAttribute('data-theme') || 'light';
+    themeToggle.addEventListener('click', function (e) {
+      e.preventDefault();
+      const current = root.getAttribute('data-theme') || 'dark';
       const next = current === 'dark' ? 'light' : 'dark';
-      updateThemeUI(next);
+      applyTheme(next);
     });
   }
 
-  // 2. Mobile Navigation Toggle
-  const mobileNavToggle = document.getElementById('mobileNavToggle');
-  const mainNav = document.getElementById('mainNav');
-  if (mobileNavToggle && mainNav) {
-    mobileNavToggle.addEventListener('click', function () {
-      const isVisible = mainNav.style.display === 'flex';
-      mainNav.style.display = isVisible ? 'none' : 'flex';
-      if (!isVisible) {
-        mainNav.style.flexDirection = 'column';
-        mainNav.style.position = 'absolute';
-        mainNav.style.top = '74px';
-        mainNav.style.left = '0';
-        mainNav.style.right = '0';
-        mainNav.style.background = 'var(--bg-surface)';
-        mainNav.style.padding = '1.5rem';
-        mainNav.style.boxShadow = 'var(--shadow-xl)';
-        mainNav.style.borderBottom = '1px solid var(--border-light)';
+  // 2. Mobile Hamburger Menu Toggle
+  const hamburger = document.getElementById('hamburgerToggle');
+  const navLinks = document.getElementById('mainNav');
+
+  if (hamburger && navLinks) {
+    hamburger.addEventListener('click', function (e) {
+      e.stopPropagation();
+      const isOpen = navLinks.classList.toggle('open');
+      hamburger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      if (isOpen) {
+        navLinks.style.display = 'flex';
+        navLinks.style.flexDirection = 'column';
+        navLinks.style.position = 'absolute';
+        navLinks.style.top = '72px';
+        navLinks.style.left = '0';
+        navLinks.style.right = '0';
+        navLinks.style.background = 'var(--bg-surface)';
+        navLinks.style.padding = '1.5rem';
+        navLinks.style.borderBottom = '1px solid var(--border-light)';
+        navLinks.style.boxShadow = 'var(--shadow-lg)';
+      } else {
+        navLinks.style.display = '';
+      }
+    });
+
+    document.addEventListener('click', function (e) {
+      if (navLinks.classList.contains('open') && !navLinks.contains(e.target) && !hamburger.contains(e.target)) {
+        navLinks.classList.remove('open');
+        navLinks.style.display = '';
+        hamburger.setAttribute('aria-expanded', 'false');
       }
     });
   }
 
-  // 3. Automated BMI Calculator Helper (Height in cm & Weight in kg -> BMI)
+  // 3. BMI Auto-Calculator (Height in cm + Weight in kg -> BMI)
   const heightInput = document.querySelector('input[name="height"]');
   const weightInput = document.querySelector('input[name="weight"]');
   const bmiInput = document.querySelector('input[name="bmi"]');
 
-  function calculateAutoBMI() {
+  function updateComputedBMI() {
     if (!heightInput || !weightInput || !bmiInput) return;
     const h = parseFloat(heightInput.value);
     const w = parseFloat(weightInput.value);
     if (h > 50 && w > 10) {
       const hm = h / 100;
-      const computedBmi = (w / (hm * hm)).toFixed(1);
-      if (computedBmi > 10 && computedBmi < 70) {
-        bmiInput.value = computedBmi;
-        // Trigger input event on bmiInput so live preview updates!
+      const computed = (w / (hm * hm)).toFixed(1);
+      if (computed >= 10 && computed <= 70) {
+        bmiInput.value = computed;
         bmiInput.dispatchEvent(new Event('input', { bubbles: true }));
       }
     }
   }
 
   if (heightInput && weightInput) {
-    heightInput.addEventListener('input', calculateAutoBMI);
-    weightInput.addEventListener('input', calculateAutoBMI);
+    heightInput.addEventListener('input', updateComputedBMI);
+    weightInput.addEventListener('input', updateComputedBMI);
   }
 
-  // 4. Dynamic Form Conditional Fields
+  // 4. Conditional Form Groups (Gestational & Family Member)
   const genderSelect = document.querySelector('select[name="gender"]');
   const gestationalGroup = document.getElementById('gestationalGroup') || document.querySelector('[data-group="gestational"]');
   if (genderSelect && gestationalGroup) {
-    function checkGender() {
-      if (genderSelect.value === 'Female') {
-        gestationalGroup.style.display = 'flex';
-      } else {
-        gestationalGroup.style.display = 'none';
-      }
+    function toggleGestational() {
+      gestationalGroup.style.display = genderSelect.value === 'Female' ? 'flex' : 'none';
     }
-    genderSelect.addEventListener('change', checkGender);
-    checkGender();
+    genderSelect.addEventListener('change', toggleGestational);
+    toggleGestational();
   }
 
-  const familyHistorySelect = document.querySelector('select[name="family_history"]');
+  const familySelect = document.querySelector('select[name="family_history"]');
   const familyMemberGroup = document.getElementById('familyMemberGroup') || document.querySelector('[data-group="family-member"]');
-  if (familyHistorySelect && familyMemberGroup) {
-    function checkFamily() {
-      if (familyHistorySelect.value === 'Yes') {
-        familyMemberGroup.style.display = 'flex';
-      } else {
-        familyMemberGroup.style.display = 'none';
-      }
+  if (familySelect && familyMemberGroup) {
+    function toggleFamily() {
+      familyMemberGroup.style.display = familySelect.value === 'Yes' ? 'flex' : 'none';
     }
-    familyHistorySelect.addEventListener('change', checkFamily);
-    checkFamily();
+    familySelect.addEventListener('change', toggleFamily);
+    toggleFamily();
   }
 
-  // 5. Standard Form Submit Loader State
-  const standardForms = document.querySelectorAll('form:not(#bulkUploadForm)');
-  standardForms.forEach(function (form) {
-    form.addEventListener('submit', function () {
+  // 5. Safe Form Submit Loader (Does NOT freeze or permanently disable on HTML5 validation)
+  const predictionForms = document.querySelectorAll('form#quickForm, form#fullForm');
+  predictionForms.forEach(function (form) {
+    form.addEventListener('submit', function (e) {
+      if (!form.checkValidity()) {
+        return; // Let browser show validation tooltips, DO NOT disable button!
+      }
       const submitBtn = form.querySelector('button[type="submit"]');
       if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing Clinical Risk...';
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Running ML Inference...';
       }
     });
   });
 
-  // 6. Bulk Prediction Upload Logic (Drag-and-drop & AJAX file streamer)
+  // 6. Bulk Upload Drag-and-Drop & Streaming Logic
   const bulkForm = document.getElementById('bulkUploadForm');
   const dropZone = document.getElementById('dropZone');
   const fileInput = document.getElementById('fileInput');
   const fileInfo = document.getElementById('fileInfo');
   const fileName = document.getElementById('fileName');
-  const loader = document.getElementById('bulkLoading');
-  const status = document.getElementById('bulkStatus');
+  const bulkLoading = document.getElementById('bulkLoading');
+  const bulkStatus = document.getElementById('bulkStatus');
 
-  function showFileMeta(name, size) {
+  function showFileDetails(name, size) {
     if (fileInfo && fileName) {
       const sizeStr = size ? ` (${(size / 1024).toFixed(1)} KB)` : '';
       fileName.textContent = name + sizeStr;
@@ -140,54 +140,53 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   if (dropZone && fileInput) {
-    dropZone.addEventListener('click', () => fileInput.click());
+    dropZone.addEventListener('click', function () {
+      fileInput.click();
+    });
 
-    ['dragenter', 'dragover'].forEach(eventName => {
-      dropZone.addEventListener(eventName, (e) => {
+    ['dragenter', 'dragover'].forEach(name => {
+      dropZone.addEventListener(name, function (e) {
         e.preventDefault();
         dropZone.classList.add('dragover');
       }, false);
     });
 
-    ['dragleave', 'drop'].forEach(eventName => {
-      dropZone.addEventListener(eventName, (e) => {
+    ['dragleave', 'drop'].forEach(name => {
+      dropZone.addEventListener(name, function (e) {
         e.preventDefault();
         dropZone.classList.remove('dragover');
       }, false);
     });
 
-    dropZone.addEventListener('drop', (e) => {
+    dropZone.addEventListener('drop', function (e) {
       if (e.dataTransfer && e.dataTransfer.files.length) {
         fileInput.files = e.dataTransfer.files;
-        const f = e.dataTransfer.files[0];
-        showFileMeta(f.name, f.size);
+        showFileDetails(e.dataTransfer.files[0].name, e.dataTransfer.files[0].size);
       }
     });
 
-    fileInput.addEventListener('change', () => {
-      if (fileInput.files.length) {
-        const f = fileInput.files[0];
-        showFileMeta(f.name, f.size);
+    fileInput.addEventListener('change', function () {
+      if (fileInput.files && fileInput.files.length) {
+        showFileDetails(fileInput.files[0].name, fileInput.files[0].size);
       }
     });
   }
 
-  if (bulkForm) {
+  if (bulkForm && fileInput) {
     bulkForm.addEventListener('submit', function (e) {
       e.preventDefault();
-      if (loader) loader.style.display = 'block';
-      if (status) {
-        status.textContent = 'Parsing clinical records and computing risk scores...';
-        status.style.color = 'var(--primary)';
+      if (!fileInput.files || !fileInput.files.length) {
+        if (bulkStatus) {
+          bulkStatus.textContent = 'Please choose or drop a CSV file first.';
+          bulkStatus.style.color = 'var(--status-high)';
+        }
+        return;
       }
 
-      if (!fileInput || !fileInput.files || !fileInput.files.length) {
-        if (status) {
-          status.textContent = 'Please choose a CSV file first.';
-          status.style.color = 'var(--risk-high)';
-        }
-        if (loader) loader.style.display = 'none';
-        return;
+      if (bulkLoading) bulkLoading.style.display = 'flex';
+      if (bulkStatus) {
+        bulkStatus.textContent = 'Processing dataset through ML ensemble...';
+        bulkStatus.style.color = 'var(--neon-cyan)';
       }
 
       const file = fileInput.files[0];
@@ -195,57 +194,56 @@ document.addEventListener('DOMContentLoaded', function () {
 
       reader.onload = function (ev) {
         const text = ev.target.result;
-        const form = new FormData();
-        const modeSelect = bulkForm.querySelector('select[name="mode"]');
-        const mode = modeSelect ? modeSelect.value : 'quick';
-        form.append('mode', mode);
-        form.append('file_text', text);
+        const formData = new FormData();
+        const mode = bulkForm.querySelector('select[name="mode"]').value || 'quick';
+        formData.append('mode', mode);
+        formData.append('file_text', text);
 
         fetch('/bulk-predict-ajax', {
           method: 'POST',
-          body: form,
+          body: formData,
         })
           .then(async function (response) {
             if (!response.ok) {
-              const errTxt = await response.text();
-              throw new Error(errTxt || 'Bulk processing failed');
+              const err = await response.text();
+              throw new Error(err || 'Server rejected CSV');
             }
             const blob = await response.blob();
             const cd = response.headers.get('Content-Disposition') || '';
             const m = cd.match(/filename\*?=(?:"([^"]+)"|([^;]+))/i);
-            const downloadFilename = m ? (m[1] || m[2] || 'bulk_predictions.csv') : 'bulk_predictions.csv';
+            const downloadName = m ? (m[1] || m[2] || 'bulk_predictions.csv') : 'bulk_predictions.csv';
 
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = downloadFilename;
+            a.download = downloadName;
             document.body.appendChild(a);
             a.click();
             a.remove();
             URL.revokeObjectURL(url);
 
-            if (status) {
-              status.textContent = '✔ Batch predictions computed and downloaded successfully!';
-              status.style.color = 'var(--risk-low)';
+            if (bulkStatus) {
+              bulkStatus.textContent = '✔ Batch predictions computed and downloaded successfully!';
+              bulkStatus.style.color = 'var(--status-low)';
             }
           })
           .catch(function (err) {
-            if (status) {
-              status.textContent = 'Error: ' + (err.message || 'Processing failed');
-              status.style.color = 'var(--risk-high)';
+            if (bulkStatus) {
+              bulkStatus.textContent = 'Error: ' + (err.message || 'Processing failed');
+              bulkStatus.style.color = 'var(--status-high)';
             }
           })
           .finally(function () {
-            if (loader) loader.style.display = 'none';
+            if (bulkLoading) bulkLoading.style.display = 'none';
           });
       };
 
       reader.onerror = function () {
-        if (status) {
-          status.textContent = 'Failed to read file in browser.';
-          status.style.color = 'var(--risk-high)';
+        if (bulkStatus) {
+          bulkStatus.textContent = 'Failed to read file in browser.';
+          bulkStatus.style.color = 'var(--status-high)';
         }
-        if (loader) loader.style.display = 'none';
+        if (bulkLoading) bulkLoading.style.display = 'none';
       };
 
       reader.readAsText(file);

@@ -1,513 +1,325 @@
 {% extends "base.html" %}
 
-{% block title %}Comprehensive Clinical Review – GlucoShield{% endblock %}
+{% block title %}Detailed Clinical Assessment | Diabetes Risk Predictor{% endblock %}
 
 {% block content %}
 <div class="card studio-card">
   <!-- Studio Header -->
   <div class="studio-header">
     <div>
-      <div class="eyebrow" style="margin-bottom: 0.4rem; background: rgba(13, 148, 136, 0.15); color: var(--accent-teal);">
-        <i class="fas fa-microscope"></i> Full Clinical Panel
+      <div class="eyebrow" style="margin-bottom: 0.4rem; color: var(--neon-purple); background: rgba(139, 92, 246, 0.1); border-color: rgba(139, 92, 246, 0.3);">
+        <i class="fas fa-dna"></i> Comprehensive Diagnostic
       </div>
-      <h1 style="font-size: 1.85rem; font-weight: 800; letter-spacing: -0.02em;">
-        Comprehensive Diabetes Diagnostic Review
+      <h1 style="font-size: 2rem; font-weight: 800; letter-spacing: -0.02em;">
+        Full Clinical Parameter Assessment
       </h1>
       <p style="color: var(--text-secondary); font-size: 0.95rem; margin-top: 0.25rem;">
-        In-depth clinical evaluation incorporating complete 8-biomarker lab values and multi-factor lifestyle modifiers.
+        Complete 8-biomarker laboratory investigation evaluating insulin, pedigree function, blood pressure, and metabolic modifiers.
       </p>
     </div>
 
-    <!-- Mode Selector Segmented Control -->
-    <div class="mode-segmented-control" role="group" aria-label="Assessment mode">
-      <a class="mode-btn" href="{{ url_for('quick') }}">
+    <!-- Mode Selector Tab -->
+    <div class="mode-toggle-group">
+      <a class="mode-tab" href="{{ url_for('quick') }}">
         <i class="fas fa-bolt"></i> Quick
       </a>
-      <a class="mode-btn active" href="{{ url_for('full') }}">
+      <a class="mode-tab active" href="{{ url_for('full') }}">
         <i class="fas fa-dna"></i> Full Panel
       </a>
     </div>
   </div>
 
-  <div class="studio-layout">
-    <!-- Form Area -->
-    <form method="post" action="{{ url_for('predict') }}" class="studio-form" id="fullForm">
-      <input type="hidden" name="mode" value="full" />
-      <input type="hidden" name="lifestyle_expanded" value="1" />
+  <!-- Form Area -->
+  <form method="post" action="{{ url_for('predict') }}" id="fullForm">
+    <input type="hidden" name="mode" value="full" />
+    <input type="hidden" name="lifestyle_expanded" value="1" />
 
-      <!-- Section 1: Patient Demographics & Profile -->
-      <div class="form-section-card">
-        <div class="form-section-title">
-          <i class="fas fa-user-circle"></i>
-          <span>Patient Identification & Family Pedigree</span>
+    <!-- Section 1: Patient Profile & Pedigree -->
+    <div class="form-card-section">
+      <div class="form-section-title">
+        <i class="fas fa-user-circle"></i>
+        <span>Patient Demographics & Genetic Pedigree</span>
+      </div>
+
+      <div class="form-grid-3">
+        <div class="form-group">
+          <label class="form-label" for="fullName">
+            <span>Full Name</span>
+          </label>
+          <div class="input-wrap has-icon-left">
+            <i class="fas fa-user input-icon-left"></i>
+            <input type="text" id="fullName" name="name" placeholder="e.g., Jordan Reed" required />
+          </div>
         </div>
 
-        <div class="form-grid-3">
-          <div class="form-group">
-            <label class="form-label" for="fullPatientName">
-              <span>Full Name</span>
-            </label>
-            <div class="input-wrapper has-icon-left">
-              <i class="fas fa-user input-icon-left"></i>
-              <input type="text" id="fullPatientName" name="name" placeholder="e.g., Robert Vance" required />
-            </div>
+        <div class="form-group">
+          <label class="form-label" for="fullEmail">
+            <span>Email Address <span class="form-hint" style="color: var(--text-muted);">(Optional)</span></span>
+          </label>
+          <div class="input-wrap has-icon-left">
+            <i class="fas fa-envelope input-icon-left"></i>
+            <input type="email" id="fullEmail" name="email" placeholder="patient@clinic.org" />
           </div>
+        </div>
 
-          <div class="form-group">
-            <label class="form-label" for="fullPatientEmail">
-              <span>Email Address <span class="form-hint">(Optional)</span></span>
-            </label>
-            <div class="input-wrapper has-icon-left">
-              <i class="fas fa-envelope input-icon-left"></i>
-              <input type="email" id="fullPatientEmail" name="email" placeholder="patient@clinic.org" />
-            </div>
+        <div class="form-group">
+          <label class="form-label" for="fullAge">
+            <span>Age <span style="color: var(--status-high);">*</span></span>
+            <span class="form-hint">Years</span>
+          </label>
+          <div class="input-wrap has-icon-left has-unit-right">
+            <i class="fas fa-calendar-alt input-icon-left"></i>
+            <input type="number" id="fullAge" name="age" min="1" max="120" placeholder="48" required />
+            <span class="input-unit-right">yrs</span>
           </div>
+        </div>
 
-          <div class="form-group">
-            <label class="form-label" for="fullPatientAge">
-              <span>Age <span style="color: var(--risk-high); font-weight: bold;">*</span></span>
-              <span class="form-hint">Years</span>
-            </label>
-            <div class="input-wrapper has-icon-left has-unit-right">
-              <i class="fas fa-calendar-alt input-icon-left"></i>
-              <input type="number" id="fullPatientAge" name="age" min="1" max="120" placeholder="48" required />
-              <span class="input-unit-right">yrs</span>
-            </div>
+        <div class="form-group">
+          <label class="form-label" for="fullGender">
+            <span>Biological Sex <span style="color: var(--status-high);">*</span></span>
+          </label>
+          <select id="fullGender" name="gender" required>
+            <option value="">Select sex...</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="fullFamily">
+            <span>Family Diabetes History</span>
+          </label>
+          <select id="fullFamily" name="family_history">
+            <option value="No">No First-Degree Relatives</option>
+            <option value="Yes">Yes (Positive History)</option>
+          </select>
+        </div>
+
+        <div class="form-group" id="familyMemberGroup" data-group="family-member" style="display: none;">
+          <label class="form-label" for="fullFamilyMember">
+            <span>Which Relative?</span>
+          </label>
+          <select id="fullFamilyMember" name="family_member">
+            <option value="Parent">Parent</option>
+            <option value="Sibling">Sibling</option>
+            <option value="Child">Child</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 2: Complete 8-Biomarker Laboratory Profile -->
+    <div class="form-card-section">
+      <div class="form-section-title">
+        <i class="fas fa-flask-vial"></i>
+        <span>Clinical Laboratory Biomarkers</span>
+      </div>
+
+      <div class="form-grid-3">
+        <div class="form-group">
+          <label class="form-label" for="fullGlucose">
+            <span>Fasting Blood Glucose <span style="color: var(--status-high);">*</span></span>
+            <span class="form-hint">70–99 mg/dL</span>
+          </label>
+          <div class="input-wrap has-unit-right">
+            <input type="number" id="fullGlucose" name="glucose" min="0" max="500" step="0.1" placeholder="105" required />
+            <span class="input-unit-right">mg/dL</span>
           </div>
+        </div>
 
-          <div class="form-group">
-            <label class="form-label" for="fullPatientGender">
-              <span>Biological Sex <span style="color: var(--risk-high); font-weight: bold;">*</span></span>
-            </label>
-            <select id="fullPatientGender" name="gender" required>
-              <option value="">Select sex...</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-              <option value="Other">Other / Non-disclosed</option>
-            </select>
+        <div class="form-group">
+          <label class="form-label" for="fullBP">
+            <span>Blood Pressure (Systolic)</span>
+            <span class="form-hint">90–120 mmHg</span>
+          </label>
+          <div class="input-wrap has-unit-right">
+            <input type="number" id="fullBP" name="blood_pressure" min="50" max="250" value="120" />
+            <span class="input-unit-right">mmHg</span>
           </div>
+        </div>
 
-          <div class="form-group">
-            <label class="form-label" for="fullFamilyHistory">
-              <span>Family Diabetes History</span>
-            </label>
-            <select id="fullFamilyHistory" name="family_history">
-              <option value="No">No First-Degree Relatives</option>
-              <option value="Yes">Yes (Positive History)</option>
-            </select>
+        <div class="form-group">
+          <label class="form-label" for="fullBMI">
+            <span>Body Mass Index (BMI)</span>
+            <span class="form-hint">18.5–24.9</span>
+          </label>
+          <div class="input-wrap has-unit-right">
+            <input type="number" id="fullBMI" name="bmi" min="10" max="60" step="0.1" placeholder="26.4" />
+            <span class="input-unit-right">kg/m²</span>
           </div>
+        </div>
 
-          <div class="form-group" id="familyMemberGroup" data-group="family-member" style="display: none;">
-            <label class="form-label" for="fullFamilyMember">
-              <span>Which Relative?</span>
-            </label>
-            <select id="fullFamilyMember" name="family_member">
-              <option value="Parent">Parent</option>
-              <option value="Sibling">Sibling</option>
-              <option value="Child">Child</option>
-            </select>
+        <div class="form-group">
+          <label class="form-label" for="fullInsulin">
+            <span>Serum Insulin</span>
+            <span class="form-hint">16–166 μU/mL</span>
+          </label>
+          <div class="input-wrap has-unit-right">
+            <input type="number" id="fullInsulin" name="insulin" min="0" max="1000" value="0" />
+            <span class="input-unit-right">μU/mL</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="fullSkin">
+            <span>Skinfold Thickness</span>
+            <span class="form-hint">Triceps</span>
+          </label>
+          <div class="input-wrap has-unit-right">
+            <input type="number" id="fullSkin" name="skin_thickness" min="0" max="100" value="0" />
+            <span class="input-unit-right">mm</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="fullDPF">
+            <span>Diabetes Pedigree (DPF)</span>
+            <span class="form-hint">0.08–2.42</span>
+          </label>
+          <input type="number" id="fullDPF" name="dpf" step="0.01" min="0" max="2.5" value="0.5" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="fullPregnancies">
+            <span>Pregnancies</span>
+            <span class="form-hint">(0 for nulliparous)</span>
+          </label>
+          <input type="number" id="fullPregnancies" name="pregnancies" min="0" max="20" value="0" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="fullHeight">
+            <span>Height <span class="form-hint" style="color: var(--text-muted);">(Auto-BMI)</span></span>
+          </label>
+          <div class="input-wrap has-unit-right">
+            <input type="number" id="fullHeight" name="height" min="50" max="250" placeholder="172" />
+            <span class="input-unit-right">cm</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="fullWeight">
+            <span>Weight <span class="form-hint" style="color: var(--text-muted);">(Auto-BMI)</span></span>
+          </label>
+          <div class="input-wrap has-unit-right">
+            <input type="number" id="fullWeight" name="weight" step="0.1" min="10" max="300" placeholder="74.0" />
+            <span class="input-unit-right">kg</span>
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- Section 2: Complete 8-Biomarker Laboratory Profile -->
-      <div class="form-section-card">
-        <div class="form-section-title">
-          <i class="fas fa-flask-vial"></i>
-          <span>Clinical Biomarkers & Diagnostic Measurements</span>
-        </div>
-
-        <div class="form-grid-3">
-          <div class="form-group">
-            <label class="form-label" for="fullGlucose">
-              <span>Fasting Glucose <span style="color: var(--risk-high); font-weight: bold;">*</span></span>
-              <span class="form-hint" style="color: var(--risk-low); font-weight: 600;">70–99</span>
-            </label>
-            <div class="input-wrapper has-unit-right">
-              <input type="number" id="fullGlucose" name="glucose" min="0" max="500" step="0.1" placeholder="105" required />
-              <span class="input-unit-right">mg/dL</span>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" for="fullBP">
-              <span>Blood Pressure (Systolic)</span>
-              <span class="form-hint" style="color: var(--risk-low); font-weight: 600;">90–120</span>
-            </label>
-            <div class="input-wrapper has-unit-right">
-              <input type="number" id="fullBP" name="blood_pressure" min="50" max="250" value="120" />
-              <span class="input-unit-right">mmHg</span>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" for="fullBMI">
-              <span>Body Mass Index (BMI)</span>
-              <span class="form-hint" style="color: var(--risk-low); font-weight: 600;">18.5–24.9</span>
-            </label>
-            <div class="input-wrapper has-unit-right">
-              <input type="number" id="fullBMI" name="bmi" min="10" max="60" step="0.1" placeholder="26.2" />
-              <span class="input-unit-right">kg/m²</span>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" for="fullInsulin">
-              <span>Serum Insulin</span>
-              <span class="form-hint">16–166</span>
-            </label>
-            <div class="input-wrapper has-unit-right">
-              <input type="number" id="fullInsulin" name="insulin" min="0" max="1000" value="0" />
-              <span class="input-unit-right">μU/mL</span>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" for="fullSkinThickness">
-              <span>Skinfold Thickness</span>
-              <span class="form-hint">Triceps</span>
-            </label>
-            <div class="input-wrapper has-unit-right">
-              <input type="number" id="fullSkinThickness" name="skin_thickness" min="0" max="100" value="0" />
-              <span class="input-unit-right">mm</span>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" for="fullDPF">
-              <span>Pedigree Function (DPF)</span>
-              <span class="form-hint">0.08–2.42</span>
-            </label>
-            <div class="input-wrapper">
-              <input type="number" id="fullDPF" name="dpf" step="0.01" min="0" max="2.5" value="0.5" />
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" for="fullPregnancies">
-              <span>Pregnancies</span>
-              <span class="form-hint">(0 for nulliparous)</span>
-            </label>
-            <div class="input-wrapper">
-              <input type="number" id="fullPregnancies" name="pregnancies" min="0" max="20" value="0" />
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" for="fullHeight">
-              <span>Height <span class="form-hint">(Auto-BMI)</span></span>
-            </label>
-            <div class="input-wrapper has-unit-right">
-              <input type="number" id="fullHeight" name="height" min="50" max="250" placeholder="170" />
-              <span class="input-unit-right">cm</span>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" for="fullWeight">
-              <span>Weight <span class="form-hint">(Auto-BMI)</span></span>
-            </label>
-            <div class="input-wrapper has-unit-right">
-              <input type="number" id="fullWeight" name="weight" step="0.1" min="10" max="300" placeholder="75.0" />
-              <span class="input-unit-right">kg</span>
-            </div>
-          </div>
-        </div>
+    <!-- Section 3: Lifestyle & Secondary Risk Modifiers -->
+    <div class="form-card-section">
+      <div class="form-section-title">
+        <i class="fas fa-heart-pulse"></i>
+        <span>Lifestyle Behaviors & Secondary Risk Factors</span>
       </div>
 
-      <!-- Section 3: Lifestyle & Secondary Medical Modifiers -->
-      <div class="form-section-card">
-        <div class="form-section-title">
-          <i class="fas fa-heart-pulse"></i>
-          <span>Lifestyle Behaviors & Secondary Risk Factors</span>
+      <div class="form-grid-3">
+        <div class="form-group" id="gestationalGroup" data-group="gestational" style="display: none;">
+          <label class="form-label" for="fullGestational">
+            <span>Gestational Diabetes History</span>
+          </label>
+          <select id="fullGestational" name="gestational">
+            <option value="No">No</option>
+            <option value="Yes">Yes</option>
+          </select>
         </div>
 
-        <div class="form-grid-3">
-          <div class="form-group" id="gestationalGroup" data-group="gestational" style="display: none;">
-            <label class="form-label" for="fullGestational">
-              <span>Gestational Diabetes History</span>
-            </label>
-            <select id="fullGestational" name="gestational">
-              <option value="No">No</option>
-              <option value="Yes">Yes</option>
-            </select>
+        <div class="form-group">
+          <label class="form-label" for="fullActivity">
+            <span>Physical Activity</span>
+            <span class="form-hint">min/week</span>
+          </label>
+          <div class="input-wrap has-unit-right">
+            <input type="number" id="fullActivity" name="activity" min="0" max="10000" placeholder="150" />
+            <span class="input-unit-right">min</span>
           </div>
+        </div>
 
-          <div class="form-group">
-            <label class="form-label" for="fullActivity">
-              <span>Physical Activity</span>
-              <span class="form-hint">min/week</span>
-            </label>
-            <div class="input-wrapper has-unit-right">
-              <input type="number" id="fullActivity" name="activity" min="0" max="10000" placeholder="150" />
-              <span class="input-unit-right">min</span>
-            </div>
-          </div>
+        <div class="form-group">
+          <label class="form-label" for="fullDiet">
+            <span>Diet Quality (1–10)</span>
+          </label>
+          <input type="number" id="fullDiet" name="diet" min="1" max="10" placeholder="7" />
+        </div>
 
-          <div class="form-group">
-            <label class="form-label" for="fullDiet">
-              <span>Diet Quality Index</span>
-              <span class="form-hint">Scale 1–10</span>
-            </label>
-            <input type="number" id="fullDiet" name="diet" min="1" max="10" placeholder="7" />
-          </div>
+        <div class="form-group">
+          <label class="form-label" for="fullSmoking">
+            <span>Tobacco / Smoking</span>
+          </label>
+          <select id="fullSmoking" name="smoking">
+            <option value="Never">Never</option>
+            <option value="Former">Former smoker</option>
+            <option value="Current">Current smoker</option>
+          </select>
+        </div>
 
-          <div class="form-group">
-            <label class="form-label" for="fullSmoking">
-              <span>Tobacco / Smoking</span>
-            </label>
-            <select id="fullSmoking" name="smoking">
-              <option value="Never">Never smoked</option>
-              <option value="Former">Former smoker</option>
-              <option value="Current">Current smoker</option>
-            </select>
-          </div>
+        <div class="form-group">
+          <label class="form-label" for="fullAlcohol">
+            <span>Alcohol Use</span>
+          </label>
+          <select id="fullAlcohol" name="alcohol">
+            <option value="None">None</option>
+            <option value="Occasional">Occasional</option>
+            <option value="Regular">Regular</option>
+          </select>
+        </div>
 
-          <div class="form-group">
-            <label class="form-label" for="fullAlcohol">
-              <span>Alcohol Consumption</span>
-            </label>
-            <select id="fullAlcohol" name="alcohol">
-              <option value="None">None</option>
-              <option value="Occasional">Occasional</option>
-              <option value="Regular">Regular</option>
-            </select>
+        <div class="form-group">
+          <label class="form-label" for="fullSleep">
+            <span>Sleep Duration</span>
+            <span class="form-hint">Hours</span>
+          </label>
+          <div class="input-wrap has-unit-right">
+            <input type="number" id="fullSleep" name="sleep" step="0.5" min="0" max="24" placeholder="7.0" />
+            <span class="input-unit-right">hrs</span>
           </div>
+        </div>
 
-          <div class="form-group">
-            <label class="form-label" for="fullSleep">
-              <span>Nightly Sleep Duration</span>
-              <span class="form-hint">Hours</span>
-            </label>
-            <div class="input-wrapper has-unit-right">
-              <input type="number" id="fullSleep" name="sleep" step="0.5" min="0" max="24" placeholder="7.0" />
-              <span class="input-unit-right">hrs</span>
-            </div>
-          </div>
+        <div class="form-group">
+          <label class="form-label" for="fullStress">
+            <span>Stress Index (1–10)</span>
+          </label>
+          <input type="number" id="fullStress" name="stress" min="1" max="10" placeholder="5" />
+        </div>
 
-          <div class="form-group">
-            <label class="form-label" for="fullStress">
-              <span>Perceived Stress Level</span>
-              <span class="form-hint">Scale 1–10</span>
-            </label>
-            <input type="number" id="fullStress" name="stress" min="1" max="10" placeholder="5" />
-          </div>
+        <div class="form-group">
+          <label class="form-label" for="fullHypertension">
+            <span>Hypertension Diagnosis</span>
+          </label>
+          <select id="fullHypertension" name="hypertension">
+            <option value="No">No</option>
+            <option value="Yes">Yes</option>
+          </select>
+        </div>
 
-          <div class="form-group">
-            <label class="form-label" for="fullHypertension">
-              <span>Hypertension Diagnosis</span>
-            </label>
-            <select id="fullHypertension" name="hypertension">
-              <option value="No">No</option>
-              <option value="Yes">Yes</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" for="fullCholesterol">
-              <span>High Cholesterol / Lipid History</span>
-            </label>
-            <select id="fullCholesterol" name="cholesterol_history">
-              <option value="No">No</option>
-              <option value="Yes">Yes</option>
-            </select>
-          </div>
+        <div class="form-group">
+          <label class="form-label" for="fullCholesterol">
+            <span>High Cholesterol / Lipid History</span>
+          </label>
+          <select id="fullCholesterol" name="cholesterol_history">
+            <option value="No">No</option>
+            <option value="Yes">Yes</option>
+          </select>
         </div>
       </div>
+    </div>
 
-      <!-- Action Buttons -->
-      <div style="display: flex; gap: 1rem; align-items: center; margin-top: 0.5rem;">
-        <button type="submit" class="btn btn-primary btn-lg">
-          <i class="fas fa-stethoscope"></i> Compute Full Diagnostic Report
-        </button>
-        <a class="btn btn-secondary btn-lg" href="{{ url_for('reset') }}">
-          <i class="fas fa-rotate-left"></i> Reset Form
-        </a>
-      </div>
-    </form>
-
-    <!-- Sticky Live Triage Monitor -->
-    <aside class="studio-side-monitor">
-      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
-        <div class="eyebrow" style="margin-bottom: 0;">
-          <i class="fas fa-wave-square"></i> Real-Time Monitor
-        </div>
-        <span class="pulse-dot"></span>
-      </div>
-
-      <div class="live-score-display">
-        <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.08em; margin-bottom: 0.35rem;">
-          Computed Risk Score
-        </div>
-        <div id="liveRiskScore" class="live-score-number">--</div>
-        <div style="margin-top: 0.65rem;">
-          <span id="liveRiskBadge" class="live-triage-badge safe">Awaiting Input</span>
-        </div>
-      </div>
-
-      <div class="live-meter-bar">
-        <div id="liveMeter" class="live-meter-fill safe" style="width: 25%;"></div>
-      </div>
-
-      <div class="live-vitals-stack">
-        <div class="live-vital-row">
-          <span>Target BMI</span>
-          <strong id="summaryBMI">—</strong>
-        </div>
-        <div class="live-vital-row">
-          <span>Blood Glucose</span>
-          <strong id="summaryGlucose">—</strong>
-        </div>
-        <div class="live-vital-row">
-          <span>Patient Age</span>
-          <strong id="summaryAge">—</strong>
-        </div>
-        <div class="live-vital-row">
-          <span>Blood Pressure</span>
-          <strong id="summaryBP">—</strong>
-        </div>
-        <div class="live-vital-row">
-          <span>Clinical Outlook</span>
-          <strong id="riskNoteText" style="color: var(--primary);">Real-time</strong>
-        </div>
-      </div>
-
-      <div style="margin-top: 1.5rem; padding: 0.85rem; background: var(--bg-surface); border-radius: var(--radius-md); font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5; border: 1px solid var(--border-light);">
-        <i class="fas fa-circle-info" style="color: var(--primary);"></i>
-        Scores adapt in real-time as you enter laboratory values and clinical modifiers.
-      </div>
-    </aside>
-  </div>
+    <!-- Actions Row -->
+    <div style="display: flex; gap: 1rem; align-items: center; justify-content: flex-start; margin-top: 1rem; flex-wrap: wrap;">
+      <button type="submit" class="btn btn-primary btn-lg" style="background: var(--grad-violet); box-shadow: 0 0 25px rgba(139, 92, 246, 0.4);">
+        <i class="fas fa-stethoscope"></i> Compute Detailed Diagnostic
+      </button>
+      <a class="btn btn-secondary btn-lg" href="{{ url_for('reset') }}">
+        <i class="fas fa-rotate-left"></i> Reset Form
+      </a>
+      <a href="{{ url_for('assessment') }}" style="color: var(--neon-cyan); font-weight: 600; font-size: 0.9rem; margin-left: auto;">
+        ← Back to Evaluation Modes
+      </a>
+    </div>
+  </form>
 </div>
-{% endblock %}
-
-{% block scripts %}
-<script>
-  function getOrDefault(selector, fallback) {
-    const el = document.querySelector(selector);
-    const val = el && el.value !== '' ? el.value : null;
-    return (val !== null && val !== undefined && val !== '') ? val : fallback;
-  }
-
-  function calculateRisk() {
-    const glucose = parseFloat(getOrDefault('input[name="glucose"]', 100)) || 100;
-    const bmi = parseFloat(getOrDefault('input[name="bmi"]', 25)) || 25;
-    const age = parseFloat(getOrDefault('input[name="age"]', 45)) || 45;
-    const bp = parseFloat(getOrDefault('input[name="blood_pressure"]', 120)) || 120;
-    const pregnancies = parseFloat(getOrDefault('input[name="pregnancies"]', 0)) || 0;
-    const family = getOrDefault('select[name="family_history"]', 'No');
-    const hypertension = getOrDefault('select[name="hypertension"]', 'No');
-    const smoking = getOrDefault('select[name="smoking"]', 'Never');
-
-    let score = 10;
-    score += age * 0.25;
-    score += glucose * 0.12;
-    score += bmi * 0.65;
-    if (pregnancies > 0) score += pregnancies * 2.0;
-    if (bp > 130) score += (bp - 130) * 0.2;
-    if (family === 'Yes') score += 12;
-    if (hypertension === 'Yes') score += 10;
-    if (smoking === 'Current') score += 18;
-    else if (smoking === 'Former') score += 8;
-
-    score = Math.max(5, Math.min(95, score));
-    return Math.round(score);
-  }
-
-  function updateRiskUI() {
-    const glucoseRaw = document.querySelector('input[name="glucose"]');
-    const bmiRaw = document.querySelector('input[name="bmi"]');
-    const ageRaw = document.querySelector('input[name="age"]');
-    const bpRaw = document.querySelector('input[name="blood_pressure"]');
-
-    if (!glucoseRaw || !bmiRaw || !ageRaw) return;
-
-    const hasGlucose = glucoseRaw.value !== '';
-    const hasBMI = bmiRaw.value !== '';
-    const hasAge = ageRaw.value !== '';
-
-    const scoreEl = document.getElementById('liveRiskScore');
-    const meterEl = document.getElementById('liveMeter');
-    const badgeEl = document.getElementById('liveRiskBadge');
-    const riskNoteText = document.getElementById('riskNoteText');
-    const summaryBMI = document.getElementById('summaryBMI');
-    const summaryGlucose = document.getElementById('summaryGlucose');
-    const summaryAge = document.getElementById('summaryAge');
-    const summaryBP = document.getElementById('summaryBP');
-
-    if (!hasGlucose && !hasBMI && !hasAge) {
-      if (scoreEl) scoreEl.textContent = '--';
-      if (meterEl) { meterEl.style.width = '0%'; meterEl.className = 'live-meter-fill safe'; }
-      if (badgeEl) { badgeEl.textContent = 'Awaiting Input'; badgeEl.className = 'live-triage-badge safe'; }
-      if (summaryBMI) summaryBMI.textContent = '—';
-      if (summaryGlucose) summaryGlucose.textContent = '—';
-      if (summaryAge) summaryAge.textContent = '—';
-      if (summaryBP) summaryBP.textContent = '—';
-      if (riskNoteText) riskNoteText.textContent = 'Standby';
-      return;
-    }
-
-    const score = calculateRisk();
-    const glucose = parseFloat(glucoseRaw.value) || 100;
-    const bmi = parseFloat(bmiRaw.value) || 25;
-    const age = parseFloat(ageRaw.value) || 45;
-    const bp = bpRaw && bpRaw.value !== '' ? parseFloat(bpRaw.value) : 120;
-
-    if (scoreEl) scoreEl.textContent = score + '%';
-    if (meterEl) meterEl.style.width = score + '%';
-
-    if (summaryBMI) summaryBMI.textContent = hasBMI ? bmi.toFixed(1) : '—';
-    if (summaryGlucose) summaryGlucose.textContent = hasGlucose ? Math.round(glucose) + ' mg/dL' : '—';
-    if (summaryAge) summaryAge.textContent = hasAge ? Math.round(age) + ' yrs' : '—';
-    if (summaryBP) summaryBP.textContent = bp ? Math.round(bp) + ' mmHg' : '—';
-
-    let tier = 'Low Risk – Normal';
-    let tierClass = 'safe';
-    let note = 'Optimal';
-
-    if (score >= 65 || glucose > 140) {
-      tier = 'High Risk – Diabetic';
-      tierClass = 'danger';
-      note = 'Action Recommended';
-    } else if (score >= 35 || glucose > 100) {
-      tier = 'Moderate Risk – Pre-Diabetic';
-      tierClass = 'warning';
-      note = 'Monitoring Advised';
-    }
-
-    if (badgeEl) {
-      badgeEl.textContent = tier;
-      badgeEl.className = 'live-triage-badge ' + tierClass;
-    }
-    if (meterEl) {
-      meterEl.className = 'live-meter-fill ' + tierClass;
-    }
-    if (riskNoteText) {
-      riskNoteText.textContent = note;
-    }
-  }
-
-  const fullFields = [
-    'input[name="glucose"]',
-    'input[name="bmi"]',
-    'input[name="age"]',
-    'input[name="pregnancies"]',
-    'input[name="blood_pressure"]',
-    'input[name="height"]',
-    'input[name="weight"]',
-    'select[name="family_history"]',
-    'select[name="hypertension"]',
-    'select[name="smoking"]'
-  ];
-
-  fullFields.forEach(selector => {
-    const el = document.querySelector(selector);
-    if (el) {
-      el.addEventListener('input', updateRiskUI);
-      el.addEventListener('change', updateRiskUI);
-    }
-  });
-
-  updateRiskUI();
-</script>
 {% endblock %}

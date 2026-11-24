@@ -1,129 +1,140 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#0284c7" />
-    <title>{% block title %}GlucoShield – Clinical AI Diabetes Risk Intelligence{% endblock %}</title>
-    
-    <!-- Preconnect Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
-    
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwUEQpZT9qr9R3e6uR5e8pF7oH5t4P9EOD8tM1TgTn9fR1I5R2hFQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    
-    <!-- Chart.js CDN for interactive visual analytics -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <!-- App Stylesheet -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0284c7" />
+  <title>{% block title %}GlucoShield – Clinical AI Diabetes Risk Intelligence{% endblock %}</title>
 
-    <!-- Theme Initializer (Prevents Flash of Unstyled Theme) -->
-    <script>
-      (function () {
-        try {
-          const stored = localStorage.getItem('theme');
-          const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-          const theme = stored || (prefersDark ? 'dark' : 'light');
-          document.documentElement.setAttribute('data-theme', theme);
-          if (theme === 'dark') {
-            document.documentElement.classList.add('dark');
-          }
-        } catch (e) {
-          document.documentElement.setAttribute('data-theme', 'light');
+  <!-- Preconnect Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet" />
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwUEQpZT9qr9R3e6uR5e8pF7oH5t4P9EOD8tM1TgTn9fR1I5R2hFQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- Chart.js CDN for interactive visual analytics -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- App Stylesheet -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+
+  <!-- Theme Initializer (Prevents Flash of Unstyled Theme) -->
+  <script>
+    (function () {
+      try {
+        const stored = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const theme = stored || (prefersDark ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+        if (theme === 'dark') {
+          document.documentElement.classList.add('dark');
         }
-      })();
-    </script>
-  </head>
-  <body>
-    <!-- Top Navigation Bar -->
-    <header class="topbar">
-      <div class="container nav">
-        <a href="{{ url_for('index') }}" class="brand" aria-label="GlucoShield Home">
-          <span class="brand-mark">
-            <i class="fas fa-heart-pulse"></i>
-          </span>
-          <span>GlucoShield</span>
-          <span class="brand-badge">Clinical AI</span>
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  </script>
+</head>
+
+<body>
+  <!-- Top Navigation Bar -->
+  <header class="topbar">
+    <div class="container nav">
+      <a href="{{ url_for('index') }}" class="brand" aria-label="GlucoShield Home">
+        <span class="brand-mark">
+          <i class="fas fa-heart-pulse"></i>
+        </span>
+        <span>GlucoShield</span>
+        <span class="brand-badge">Clinical AI</span>
+      </a>
+
+      <nav class="main-nav" id="mainNav" aria-label="Main navigation">
+        <a href="{{ url_for('index') }}" class="{% if request.endpoint == 'index' %}active{% endif %}">
+          <i class="fas fa-home-alt"></i> Home
+        </a>
+        <a href="{{ url_for('assessment') }}"
+          class="{% if request.endpoint in ['assessment', 'quick', 'full'] %}active{% endif %}">
+          <i class="fas fa-stethoscope"></i> Assessment
+        </a>
+        <a href="{{ url_for('bulk_page') }}"
+          class="{% if request.endpoint in ['bulk_page', 'bulk_predict'] %}active{% endif %}">
+          <i class="fas fa-file-csv"></i> Bulk Screening
+        </a>
+        <a href="{{ url_for('dashboard') }}" class="{% if request.endpoint == 'dashboard' %}active{% endif %}">
+          <i class="fas fa-chart-pie"></i> Operations
+        </a>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="theme-toggle-btn" id="themeToggle" type="button" aria-label="Toggle theme"
+          title="Toggle dark/light theme">
+          <i class="fas fa-moon" id="themeIcon"></i>
+        </button>
+
+        <a href="{{ url_for('assessment') }}" class="nav-cta">
+          <i class="fas fa-plus-circle"></i>
+          <span>New Triage</span>
         </a>
 
-        <nav class="main-nav" id="mainNav" aria-label="Main navigation">
-          <a href="{{ url_for('index') }}" class="{% if request.endpoint == 'index' %}active{% endif %}">
-            <i class="fas fa-home-alt"></i> Home
-          </a>
-          <a href="{{ url_for('assessment') }}" class="{% if request.endpoint in ['assessment', 'quick', 'full'] %}active{% endif %}">
-            <i class="fas fa-stethoscope"></i> Assessment
-          </a>
-          <a href="{{ url_for('bulk_page') }}" class="{% if request.endpoint in ['bulk_page', 'bulk_predict'] %}active{% endif %}">
-            <i class="fas fa-file-csv"></i> Bulk Screening
-          </a>
-          <a href="{{ url_for('dashboard') }}" class="{% if request.endpoint == 'dashboard' %}active{% endif %}">
-            <i class="fas fa-chart-pie"></i> Operations
-          </a>
-        </nav>
+        <button class="mobile-nav-toggle" id="mobileNavToggle" type="button" aria-label="Open mobile menu">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
 
-        <div class="nav-actions">
-          <button class="theme-toggle-btn" id="themeToggle" type="button" aria-label="Toggle theme" title="Toggle dark/light theme">
-            <i class="fas fa-moon" id="themeIcon"></i>
-          </button>
-          
-          <a href="{{ url_for('assessment') }}" class="nav-cta">
-            <i class="fas fa-plus-circle"></i>
-            <span>New Triage</span>
-          </a>
+  <!-- Main Content Area -->
+  <main class="container shell">
+    {% block content %}{% endblock %}
+  </main>
 
-          <button class="mobile-nav-toggle" id="mobileNavToggle" type="button" aria-label="Open mobile menu">
-            <i class="fas fa-bars"></i>
-          </button>
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand-meta">
+          <div class="brand" style="margin-bottom: 0.5rem;">
+            <span class="brand-mark" style="width: 32px; height: 32px; font-size: 0.95rem;">
+              <i class="fas fa-heart-pulse"></i>
+            </span>
+            <span style="font-size: 1.15rem;">GlucoShield</span>
+          </div>
+          <p style="color: var(--text-secondary); font-size: 0.85rem; max-width: 440px;">
+            Clinical-grade intelligent risk triage for early diabetes detection, evidence-based patient follow-up, and
+            population health screening.
+          </p>
+        </div>
+
+        <div class="footer-nav">
+          <a href="{{ url_for('index') }}">Home</a>
+          <a href="{{ url_for('assessment') }}">Screening</a>
+          <a href="{{ url_for('bulk_page') }}">Bulk Processing</a>
+          <a href="{{ url_for('dashboard') }}">Clinical Dashboard</a>
         </div>
       </div>
-    </header>
 
-    <!-- Main Content Area -->
-    <main class="container shell">
-      {% block content %}{% endblock %}
-    </main>
-
-    <!-- Site Footer -->
-    <footer class="site-footer">
-      <div class="container">
-        <div class="footer-top">
-          <div class="footer-brand-meta">
-            <div class="brand" style="margin-bottom: 0.5rem;">
-              <span class="brand-mark" style="width: 32px; height: 32px; font-size: 0.95rem;">
-                <i class="fas fa-heart-pulse"></i>
-              </span>
-              <span style="font-size: 1.15rem;">GlucoShield</span>
-            </div>
-            <p style="color: var(--text-secondary); font-size: 0.85rem; max-width: 440px;">
-              Clinical-grade intelligent risk triage for early diabetes detection, evidence-based patient follow-up, and population health screening.
-            </p>
-          </div>
-
-          <div class="footer-nav">
-            <a href="{{ url_for('index') }}">Home</a>
-            <a href="{{ url_for('assessment') }}">Screening</a>
-            <a href="{{ url_for('bulk_page') }}">Bulk Processing</a>
-            <a href="{{ url_for('dashboard') }}">Clinical Dashboard</a>
-          </div>
+      <div class="footer-bottom">
+        <div class="footer-copy">
+          &copy; 2026 GlucoShield Clinical Intelligence. For clinical decision support and screening reference.
         </div>
-
-        <div class="footer-bottom">
-          <div class="footer-copy">
-            &copy; 2026 GlucoShield Clinical Intelligence. For clinical decision support and screening reference.
-          </div>
-          <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: var(--risk-low);">
-            <span class="pulse-dot"></span>
-            <span>AI Risk Classifier Engine v2.4 Active</span>
-          </div>
+        <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: var(--risk-low);">
+          <span class="pulse-dot"></span>
+          <span>AI Risk Classifier Engine v2.4 Active</span>
         </div>
       </div>
-    </footer>
+    </div>
+  </footer>
 
-    <!-- Core Interactive Scripts -->
-    <script src="{{ url_for('static', filename='scripts/main.js') }}"></script>
-    {% block scripts %}{% endblock %}
-  </body>
+  <!-- Core Interactive Scripts -->
+  <script src="{{ url_for('static', filename='scripts/main.js') }}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+
 </html>

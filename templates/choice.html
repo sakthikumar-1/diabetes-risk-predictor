@@ -1,87 +1,100 @@
 {% extends "base.html" %}
 
-{% block title %}Select Evaluation Mode – GlucoShield{% endblock %}
+{% block title %}Select Evaluation Mode – GlucoShield Clinical AI{% endblock %}
 
 {% block content %}
-<div class="choice-container">
+<div style="max-width: 980px; margin: 0 auto;">
   <!-- Heading Section -->
-  <div class="section-heading" style="text-align: center; margin-bottom: 2.5rem;">
-    <div class="eyebrow" style="margin: 0 auto 0.75rem;">
+  <div class="section-header">
+    <div class="hero-kicker" style="margin: 0 auto 0.75rem auto;">
       <i class="fas fa-stethoscope"></i> Clinical Assessment
     </div>
-    <h1 style="font-size: 2.4rem; font-weight: 800; letter-spacing: -0.03em;">
-      Choose Your Evaluation Type
+    <h1 class="section-title" style="font-size: 2.25rem;">
+      Choose Evaluation Mode
     </h1>
-    <p class="subtitle" style="margin: 0.5rem auto 0; font-size: 1.05rem; max-width: 580px;">
-      Select rapid triage for routine physicals and walk-in check-ups, or conduct an in-depth clinical review for
-      comprehensive diagnostic evaluation.
+    <p class="section-desc" style="max-width: 580px; margin-left: auto; margin-right: auto;">
+      Select rapid triage for routine check-ups and walk-in screenings, or conduct an in-depth diagnostic panel for comprehensive metabolic evaluation.
     </p>
   </div>
 
-  <!-- Dual Selection Cards -->
-  <div class="choice-cards-grid">
+  <!-- Symmetrical Dual Selection Cards -->
+  <div class="choice-grid">
     <!-- Quick Assessment Card -->
-    <a href="{{ url_for('quick') }}" style="display: block; text-decoration: none; color: inherit;">
-      <div class="choice-card-interactive">
-        <div class="choice-icon-wrap">
+    <div class="choice-card">
+      <div>
+        <div class="choice-icon">
           <i class="fas fa-bolt"></i>
         </div>
-        <span class="choice-tier-pill">Rapid Triage · ~60 Seconds</span>
-        <h3>Fast Risk Check</h3>
-        <p>
-          Ideal for quick clinic check-ins or initial screenings using core clinical indicators.
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
+          <h2 class="choice-title" style="margin-bottom: 0;">Fast Risk Check</h2>
+          <span class="badge badge-primary">~60 Seconds</span>
+        </div>
+        <p class="choice-desc">
+          Designed for initial triage and routine physicals using core non-invasive markers with instant scoring.
         </p>
 
-        <ul class="choice-features-list">
-          <li><i class="fas fa-circle-check"></i> Fasting Blood Glucose (mg/dL)</li>
-          <li><i class="fas fa-circle-check"></i> Body Mass Index (with Auto-Calculator)</li>
-          <li><i class="fas fa-circle-check"></i> Patient Age & Demographic Profile</li>
-          <li><i class="fas fa-circle-check"></i> Immediate Live Risk Scoring</li>
-        </ul>
-
-        <div style="width: 100%;">
-          <span class="btn btn-primary btn-block">
-            Launch Quick Triage <i class="fas fa-arrow-right"></i>
-          </span>
+        <div class="choice-parameters">
+          <div style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 0.05em; margin-bottom: 0.75rem;">
+            Included Parameters:
+          </div>
+          <ul class="param-list">
+            <li class="param-item"><i class="fas fa-check-circle"></i> Fasting Blood Glucose (mg/dL)</li>
+            <li class="param-item"><i class="fas fa-check-circle"></i> Body Mass Index (with Auto-Calculator)</li>
+            <li class="param-item"><i class="fas fa-check-circle"></i> Patient Age & Demographic Profile</li>
+            <li class="param-item"><i class="fas fa-check-circle"></i> Blood Pressure (Systolic)</li>
+            <li class="param-item"><i class="fas fa-check-circle"></i> Immediate Predictive Risk Score</li>
+          </ul>
         </div>
       </div>
-    </a>
+
+      <div>
+        <a href="{{ url_for('quick') }}" class="btn btn-primary" style="width: 100%;">
+          Launch Quick Triage <i class="fas fa-arrow-right"></i>
+        </a>
+      </div>
+    </div>
 
     <!-- Full Clinical Assessment Card -->
-    <a href="{{ url_for('full') }}" style="display: block; text-decoration: none; color: inherit;">
-      <div class="choice-card-interactive">
-        <div class="choice-icon-wrap" style="background: rgba(13, 148, 136, 0.15); color: var(--accent-teal);">
-          <i class="fas fa-chart-pie"></i>
+    <div class="choice-card">
+      <div>
+        <div class="choice-icon" style="background-color: var(--accent-success-subtle); color: var(--accent-success);">
+          <i class="fas fa-dna"></i>
         </div>
-        <span class="choice-tier-pill" style="background: rgba(13, 148, 136, 0.15); color: var(--accent-teal);">
-          Full Clinical Panel · ~3 Minutes
-        </span>
-        <h3>Comprehensive Review</h3>
-        <p>
-          Thorough multi-parameter diagnostic analysis incorporating complete lab values and lifestyle modifiers.
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
+          <h2 class="choice-title" style="margin-bottom: 0;">Comprehensive Review</h2>
+          <span class="badge badge-success">~3 Minutes</span>
+        </div>
+        <p class="choice-desc">
+          Comprehensive multi-biomarker diagnostic review incorporating complete laboratory values and lifestyle modifiers.
         </p>
 
-        <ul class="choice-features-list">
-          <li><i class="fas fa-circle-check"></i> Complete 8-Biomarker Laboratory Profile</li>
-          <li><i class="fas fa-circle-check"></i> Insulin, Blood Pressure & Skin Fold</li>
-          <li><i class="fas fa-circle-check"></i> Diabetes Pedigree Function (DPF) & History</li>
-          <li><i class="fas fa-circle-check"></i> Multi-factor Lifestyle & Risk Modifiers</li>
-        </ul>
-
-        <div style="width: 100%;">
-          <span class="btn btn-secondary btn-block">
-            Launch Full Review <i class="fas fa-arrow-right"></i>
-          </span>
+        <div class="choice-parameters">
+          <div style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 0.05em; margin-bottom: 0.75rem;">
+            Included Parameters:
+          </div>
+          <ul class="param-list">
+            <li class="param-item"><i class="fas fa-check-circle"></i> Complete 8-Biomarker Laboratory Profile</li>
+            <li class="param-item"><i class="fas fa-check-circle"></i> Serum Insulin & Triceps Skinfold Thickness</li>
+            <li class="param-item"><i class="fas fa-check-circle"></i> Diabetes Pedigree Function (DPF) & History</li>
+            <li class="param-item"><i class="fas fa-check-circle"></i> Pregnancies History (if female)</li>
+            <li class="param-item"><i class="fas fa-check-circle"></i> Comprehensive Metabolic Care Plan</li>
+          </ul>
         </div>
       </div>
-    </a>
+
+      <div>
+        <a href="{{ url_for('full') }}" class="btn btn-secondary" style="width: 100%;">
+          Launch Full Panel <i class="fas fa-arrow-right"></i>
+        </a>
+      </div>
+    </div>
   </div>
 
-  <!-- Additional Clinical Assistance -->
-  <div style="margin-top: 3rem; text-align: center; color: var(--text-muted); font-size: 0.9rem;">
-    <span>Have multiple patient records to triage at once?</span>
-    <a href="{{ url_for('bulk_page') }}" style="color: var(--primary); font-weight: 700; margin-left: 0.35rem;">
-      Upload a Population CSV dataset →
+  <!-- Population Batch Screening Link -->
+  <div style="margin-top: 2.5rem; text-align: center; font-size: 0.875rem; color: var(--text-secondary);">
+    <span>Need to evaluate a patient cohort or batch dataset?</span>
+    <a href="{{ url_for('bulk_page') }}" style="font-weight: 600; margin-left: 0.25rem;">
+      Open Batch CSV Screening Studio →
     </a>
   </div>
 </div>

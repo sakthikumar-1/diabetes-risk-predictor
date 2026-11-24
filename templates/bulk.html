@@ -1,106 +1,102 @@
 {% extends "base.html" %}
 
-{% block title %}Bulk Population Screening | Diabetes Risk Predictor{% endblock %}
+{% block title %}Bulk Population Screening – GlucoShield Clinical AI{% endblock %}
 
 {% block content %}
-<div style="max-width: 860px; margin: 1rem auto 3rem;">
-  <div class="card" style="padding: 2.5rem;">
+<div style="max-width: 860px; margin: 0 auto;">
+  <div class="card" style="padding: 2.25rem;">
     <!-- Header -->
-    <div class="section-heading" style="margin-bottom: 2rem;">
-      <div class="eyebrow" style="margin-bottom: 0.5rem;">
+    <div style="margin-bottom: 2rem;">
+      <div class="hero-kicker" style="margin-bottom: 0.5rem;">
         <i class="fas fa-layer-group"></i> Batch Inference Engine
       </div>
-      <h1 style="font-size: 2.25rem; font-weight: 800; letter-spacing: -0.03em;">
-        Bulk Population Screening
-      </h1>
-      <p class="subtitle" style="margin-top: 0.35rem;">
-        Upload a multi-record CSV dataset to compute simultaneous risk probabilities and download populated predictions.
+      <h1 class="card-title" style="font-size: 2rem;">Bulk Population Screening</h1>
+      <p class="card-subtitle" style="font-size: 0.95rem; margin-top: 0.35rem;">
+        Upload a multi-record CSV dataset to compute simultaneous risk probabilities and download annotated clinical predictions.
       </p>
     </div>
 
     <!-- Upload Form -->
     <form id="bulkUploadForm" action="{{ url_for('bulk_predict') }}" method="POST" enctype="multipart/form-data">
       <!-- Mode Selection -->
-      <div class="form-group" style="margin-bottom: 1.75rem;">
-        <label class="form-label" for="bulkModeSelect" style="font-size: 0.95rem; font-weight: 700;">
+      <div class="form-group" style="margin-bottom: 1.5rem;">
+        <label class="form-label" for="bulkModeSelect">
           <span>Prediction Evaluation Mode</span>
-          <span class="form-hint">Matches CSV column structure</span>
+          <span class="unit-badge">Select matching schema</span>
         </label>
-        <select name="mode" id="bulkModeSelect" required style="font-weight: 600;">
+        <select name="mode" id="bulkModeSelect" class="form-select" required>
           <option value="quick" selected>Quick Screening (Requires: bmi, glucose, age)</option>
           <option value="full">Full Clinical Panel (Requires: pregnancies, glucose, blood_pressure, skin_thickness, insulin, bmi, dpf, age)</option>
         </select>
       </div>
 
       <!-- Drag & Drop Zone -->
-      <div class="bulk-dropzone" id="dropZone" style="margin-bottom: 1.5rem;">
-        <div class="bulk-icon">
+      <div class="upload-dropzone" id="dropZone" style="margin-bottom: 1.25rem;">
+        <div class="dropzone-icon">
           <i class="fas fa-file-csv"></i>
         </div>
-        <h3 style="font-size: 1.35rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.35rem;">
-          Drop your Patient CSV dataset here
-        </h3>
-        <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 1rem;">
-          or <span style="color: var(--neon-cyan); font-weight: 700; text-decoration: underline;">click to browse files</span> from your computer
-        </p>
-        <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-muted); background: var(--bg-surface-elevated); padding: 0.3rem 0.85rem; border-radius: var(--radius-full); border: 1px solid var(--border-light);">
-          Format: .csv (UTF-8 encoded)
+        <div class="dropzone-title">Drop your Patient CSV dataset here</div>
+        <div class="dropzone-subtitle">
+          or <span style="color: var(--accent-primary); font-weight: 600; text-decoration: underline;">click to browse files</span> from your workstation
+        </div>
+        <span class="badge badge-muted" style="margin-top: 0.5rem;">
+          Supported format: .csv (UTF-8 encoded)
         </span>
         <input type="file" name="file" accept=".csv" style="display: none;" id="fileInput" required />
       </div>
 
       <!-- File Details Pill -->
-      <div id="fileInfo" style="display: none; align-items: center; justify-content: space-between; padding: 0.85rem 1.25rem; background: rgba(0, 242, 254, 0.08); border-radius: var(--radius-md); margin-bottom: 1.5rem; border: 1px solid rgba(0, 242, 254, 0.3);">
-        <div style="display: flex; align-items: center; gap: 0.65rem; color: var(--neon-cyan); font-weight: 700; font-size: 0.95rem; font-family: 'JetBrains Mono', monospace;">
-          <i class="fas fa-circle-check"></i>
+      <div id="fileInfo" class="file-info-bar" style="display: none;">
+        <div style="display: flex; align-items: center; gap: 0.5rem; color: var(--accent-primary); font-weight: 600;">
+          <i class="fas fa-check-circle"></i>
           <span id="fileName">selected_file.csv</span>
         </div>
-        <button type="button" onclick="document.getElementById('fileInput').click()" style="background: none; border: none; color: var(--neon-cyan); font-weight: 700; font-size: 0.85rem; cursor: pointer;">
+        <button type="button" onclick="document.getElementById('fileInput').click()" class="btn btn-outline btn-sm">
           Change File
         </button>
       </div>
 
       <!-- Loading Feedback -->
-      <div id="bulkLoading" style="display: none; align-items: center; gap: 0.75rem; padding: 1rem 1.25rem; background: rgba(139, 92, 246, 0.15); border-radius: var(--radius-md); margin-bottom: 1.25rem; color: var(--neon-purple); font-weight: 600; border: 1px solid var(--neon-violet);">
-        <i class="fas fa-spinner fa-spin" style="font-size: 1.25rem;"></i>
-        <span>Computing ensemble batch inferences... Preparing CSV download.</span>
+      <div id="bulkLoading" style="display: none; align-items: center; gap: 0.75rem; padding: 0.85rem 1.25rem; background: var(--accent-primary-subtle); border-radius: var(--radius-md); margin-bottom: 1.25rem; color: var(--accent-primary); font-weight: 600; border: 1px solid rgba(37, 99, 235, 0.2);">
+        <i class="fas fa-spinner fa-spin"></i>
+        <span>Analyzing cohort dataset with clinical ML pipeline... Preparing CSV download.</span>
       </div>
 
-      <div id="bulkStatus" style="font-weight: 700; font-size: 0.95rem; margin-bottom: 1.25rem;" aria-live="polite"></div>
+      <div id="bulkStatus" style="font-weight: 600; font-size: 0.9rem; margin-bottom: 1.25rem;" aria-live="polite"></div>
 
       <!-- Submit Action -->
-      <button type="submit" class="btn btn-primary btn-block btn-lg" style="font-size: 1.05rem;">
-        <i class="fas fa-cogs"></i> Process Dataset & Download Predictions →
+      <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
+        <i class="fas fa-cogs"></i> Process Dataset & Download Predictions
       </button>
     </form>
 
     <!-- Column Requirements Cheat Sheet -->
-    <div style="margin-top: 2.5rem; padding: 1.75rem; background: var(--bg-surface-elevated); border-radius: var(--radius-lg); border: 1px solid var(--border-light);">
-      <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.25rem;">
-        <h4 style="font-size: 1.05rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem;">
-          <i class="fas fa-table-columns" style="color: var(--neon-cyan);"></i>
+    <div style="margin-top: 2.25rem; padding: 1.5rem; background-color: var(--bg-secondary); border-radius: var(--radius-lg); border: 1px solid var(--border-color);">
+      <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
+        <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem;">
+          <i class="fas fa-table-columns" style="color: var(--accent-primary);"></i>
           CSV Column Format Specifications
         </h4>
         <a href="{{ url_for('bulk_test_download') }}" class="btn btn-outline btn-sm">
-          <i class="fas fa-download"></i> Download Quick Sample CSV
+          <i class="fas fa-download"></i> Download Sample CSV
         </a>
       </div>
 
-      <div style="display: flex; flex-direction: column; gap: 1rem;">
-        <div style="padding: 0.85rem 1rem; background: var(--bg-surface); border-radius: var(--radius-md); border: 1px solid var(--border-light);">
-          <strong style="color: var(--neon-cyan); display: block; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; margin-bottom: 0.35rem;">
-            QUICK MODE (3 COLUMNS):
+      <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+        <div style="padding: 0.75rem 1rem; background-color: var(--bg-surface); border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+          <strong style="color: var(--accent-primary); display: block; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; margin-bottom: 0.25rem;">
+            QUICK MODE (3 REQUIRED COLUMNS):
           </strong>
-          <code style="font-family: 'JetBrains Mono', monospace; font-size: 0.875rem; color: var(--text-primary);">
+          <code style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-primary);">
             bmi, glucose, age
           </code>
         </div>
 
-        <div style="padding: 0.85rem 1rem; background: var(--bg-surface); border-radius: var(--radius-md); border: 1px solid var(--border-light);">
-          <strong style="color: var(--neon-purple); display: block; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; margin-bottom: 0.35rem;">
-            FULL CLINICAL MODE (8 COLUMNS):
+        <div style="padding: 0.75rem 1rem; background-color: var(--bg-surface); border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+          <strong style="color: var(--accent-success); display: block; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; margin-bottom: 0.25rem;">
+            FULL CLINICAL MODE (8 REQUIRED COLUMNS):
           </strong>
-          <code style="font-family: 'JetBrains Mono', monospace; font-size: 0.875rem; color: var(--text-primary); word-break: break-all;">
+          <code style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-primary); word-break: break-all;">
             pregnancies, glucose, blood_pressure, skin_thickness, insulin, bmi, dpf, age
           </code>
         </div>

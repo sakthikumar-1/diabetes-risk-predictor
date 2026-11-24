@@ -1,182 +1,179 @@
 {% extends "base.html" %}
 
-{% block title %}Visual Explanation of Prediction | Diabetes Risk Predictor{% endblock %}
+{% block title %}Visual Risk Explanation – GlucoShield Clinical AI{% endblock %}
 
 {% block content %}
-<div style="max-width: 1040px; margin: 1rem auto 3rem;">
-  <div class="card" style="padding: 2.5rem;">
-    <!-- Header (Matching Reference Design) -->
-    <div style="text-align: center; margin-bottom: 2.5rem; padding-bottom: 1.25rem; border-bottom: 1px solid var(--border-light);">
-      <div class="eyebrow" style="margin: 0 auto 0.5rem;">
+<div style="max-width: 1040px; margin: 0 auto;">
+  <div class="card" style="padding: 2.25rem;">
+    <!-- Analytics Header -->
+    <div style="text-align: center; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-color);">
+      <div class="hero-kicker" style="margin: 0 auto 0.5rem auto;">
         <i class="fas fa-chart-line"></i> Deep Diagnostic Analytics
       </div>
-      <h1 style="font-size: 2.25rem; font-weight: 800; letter-spacing: -0.03em;">
-        Visual Explanation of Prediction
+      <h1 class="card-title" style="font-size: 2rem; justify-content: center;">
+        Visual Explanation of Risk Prediction
       </h1>
-      <p style="color: var(--text-secondary); font-size: 1rem; margin-top: 0.35rem; font-family: 'JetBrains Mono', monospace;">
-        Risk Probability: <strong style="color: {{ color }};">{{ probability|round(2) }}%</strong> | 
+      <p style="color: var(--text-secondary); font-size: 0.95rem; margin-top: 0.35rem; font-family: var(--font-mono);">
+        Risk Probability: <strong style="color: {{ color }};">{{ probability|round(2) }}%</strong> · 
         Risk Level: <strong style="color: {{ color }}; text-transform: capitalize;">{{ risk_level }} Risk</strong>
       </p>
     </div>
 
-    <!-- Patient Clinical Parameters Card (Matching Reference Design) -->
-    <div class="panel" style="margin-bottom: 2rem;">
-      <h3 style="font-size: 1.1rem; font-weight: 700; color: var(--text-primary); margin-bottom: 1.25rem; text-align: center;">
-        Patient Clinical Parameters
+    <!-- Patient Clinical Parameters Overview -->
+    <div style="margin-bottom: 2rem; padding: 1.25rem; background-color: var(--bg-secondary); border-radius: var(--radius-lg); border: 1px solid var(--border-color);">
+      <h3 style="font-size: 0.875rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; text-align: center; margin-bottom: 1rem;">
+        Patient Clinical Biomarkers
       </h3>
 
-      <div class="param-tiles-grid" style="margin: 0;">
-        <div class="param-tile">
-          <span class="param-tile-label">BMI</span>
-          <div class="param-tile-val">{{ bmi }} <small style="font-size: 0.75rem; color: var(--text-muted);">kg/m²</small></div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.75rem;">
+        <div style="padding: 0.75rem; background-color: var(--bg-surface); border-radius: var(--radius-md); border: 1px solid var(--border-color); text-align: center;">
+          <span style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase;">BMI</span>
+          <div style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary); font-family: var(--font-mono); margin-top: 0.2rem;">
+            {{ bmi }} <small style="font-size: 0.75rem; font-weight: 400; color: var(--text-secondary);">kg/m²</small>
+          </div>
         </div>
 
-        <div class="param-tile">
-          <span class="param-tile-label">Glucose</span>
-          <div class="param-tile-val">{{ glucose }} <small style="font-size: 0.75rem; color: var(--text-muted);">mg/dL</small></div>
+        <div style="padding: 0.75rem; background-color: var(--bg-surface); border-radius: var(--radius-md); border: 1px solid var(--border-color); text-align: center;">
+          <span style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase;">Glucose</span>
+          <div style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary); font-family: var(--font-mono); margin-top: 0.2rem;">
+            {{ glucose }} <small style="font-size: 0.75rem; font-weight: 400; color: var(--text-secondary);">mg/dL</small>
+          </div>
         </div>
 
-        <div class="param-tile">
-          <span class="param-tile-label">Age</span>
-          <div class="param-tile-val">{{ age|int }} <small style="font-size: 0.75rem; color: var(--text-muted);">years</small></div>
+        <div style="padding: 0.75rem; background-color: var(--bg-surface); border-radius: var(--radius-md); border: 1px solid var(--border-color); text-align: center;">
+          <span style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase;">Age</span>
+          <div style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary); font-family: var(--font-mono); margin-top: 0.2rem;">
+            {{ age|int }} <small style="font-size: 0.75rem; font-weight: 400; color: var(--text-secondary);">years</small>
+          </div>
         </div>
 
-        <div class="param-tile">
-          <span class="param-tile-label">Blood Pressure</span>
-          <div class="param-tile-val">{{ bp_systolic }}/{{ bp_diastolic }} <small style="font-size: 0.75rem; color: var(--text-muted);">mmHg</small></div>
+        <div style="padding: 0.75rem; background-color: var(--bg-surface); border-radius: var(--radius-md); border: 1px solid var(--border-color); text-align: center;">
+          <span style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase;">Blood Pressure</span>
+          <div style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary); font-family: var(--font-mono); margin-top: 0.2rem;">
+            {{ bp_systolic }}/{{ bp_diastolic }}
+          </div>
         </div>
 
         {% if patient.insulin is defined and patient.insulin|float > 0 %}
-        <div class="param-tile">
-          <span class="param-tile-label">Insulin</span>
-          <div class="param-tile-val">{{ patient.insulin }} <small style="font-size: 0.75rem; color: var(--text-muted);">μU/mL</small></div>
+        <div style="padding: 0.75rem; background-color: var(--bg-surface); border-radius: var(--radius-md); border: 1px solid var(--border-color); text-align: center;">
+          <span style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase;">Serum Insulin</span>
+          <div style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary); font-family: var(--font-mono); margin-top: 0.2rem;">
+            {{ patient.insulin }} <small style="font-size: 0.75rem; font-weight: 400; color: var(--text-secondary);">μU/mL</small>
+          </div>
         </div>
         {% endif %}
       </div>
     </div>
 
-    <!-- Side-by-Side Dual Visual Cards (Matching Reference Design) -->
-    <div style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 2rem; margin-bottom: 2rem;">
-      <!-- Card 1: Risk Score Gauge -->
-      <div class="gauge-chart-card">
-        <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary); margin-bottom: 1.5rem; text-align: center;">
-          Risk Score Gauge
-        </h3>
-
-        <div style="width: 240px; height: 160px; position: relative; margin: 0 auto;">
+    <!-- Dual Visual Cards (Gauge + Feature Comparison) -->
+    <div style="display: grid; grid-template-columns: 1fr 1.25fr; gap: 1.5rem; margin-bottom: 2rem;">
+      <!-- Semicircular Arch Gauge -->
+      <div style="padding: 1.5rem; background-color: var(--bg-surface); border-radius: var(--radius-lg); border: 1px solid var(--border-color); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+        <h3 class="card-title" style="font-size: 1.05rem; margin-bottom: 1rem;">Risk Probability Gauge</h3>
+        <div style="width: 240px; height: 160px; position: relative;">
           <canvas id="archGaugeCanvas" width="240" height="160"></canvas>
         </div>
-
-        <div style="text-align: center; margin-top: 1rem;">
-          <div style="font-size: 2.75rem; font-weight: 800; color: {{ color }}; font-family: 'JetBrains Mono', monospace; line-height: 1;">
-            {{ probability|round(1) }}%
-          </div>
-          <div style="font-size: 1rem; font-weight: 700; color: var(--text-secondary); margin-top: 0.35rem; text-transform: capitalize;">
-            {{ result_text }}
-          </div>
+        <div style="font-size: 2.5rem; font-weight: 800; color: {{ color }}; font-family: var(--font-mono); line-height: 1; margin-top: 0.5rem;">
+          {{ probability|round(1) }}%
+        </div>
+        <div style="font-size: 0.95rem; font-weight: 600; color: var(--text-secondary); margin-top: 0.25rem; text-transform: capitalize;">
+          {{ result_text }}
         </div>
       </div>
 
-      <!-- Card 2: Feature Comparison Chart -->
-      <div class="panel" style="display: flex; flex-direction: column;">
-        <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary); margin-bottom: 1.25rem; text-align: center;">
-          Feature Comparison (Patient vs Normal)
+      <!-- Feature Comparison Chart -->
+      <div style="padding: 1.5rem; background-color: var(--bg-surface); border-radius: var(--radius-lg); border: 1px solid var(--border-color);">
+        <h3 class="card-title" style="font-size: 1.05rem; margin-bottom: 1rem;">
+          Biomarker Comparison (Patient vs Target)
         </h3>
-
-        <div style="height: 250px; position: relative;">
+        <div style="height: 240px; position: relative;">
           <canvas id="featureComparisonChart"></canvas>
         </div>
       </div>
     </div>
 
-    <!-- Factor Contribution Decomposition -->
-    <div class="panel" style="margin-bottom: 2rem;">
-      <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary); margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem;">
-        <i class="fas fa-chart-column" style="color: var(--neon-cyan);"></i>
-        Biometric Driver Contribution Weights
+    <!-- Contributing Risk Factors Breakdown -->
+    <div style="margin-bottom: 2rem;">
+      <h3 class="card-title" style="margin-bottom: 1rem;">
+        <i class="fas fa-layer-group" style="color: var(--accent-primary);"></i>
+        Biometric Risk Contribution Drivers
       </h3>
 
-      <div style="display: flex; flex-direction: column; gap: 1rem;">
+      <div style="display: flex; flex-direction: column; gap: 0.85rem;">
         {% for factor in factors %}
-          {% if factor.percent > 0 %}
-          <div>
-            <div style="display: flex; justify-content: space-between; font-size: 0.875rem; font-weight: 600; margin-bottom: 0.35rem;">
-              <span style="color: var(--text-primary);">{{ factor.label }} ({{ factor.value }})</span>
-              <span style="color: var(--neon-cyan); font-family: 'JetBrains Mono', monospace;">+{{ factor.percent }}% Impact</span>
-            </div>
-            <div style="width: 100%; height: 8px; background: var(--bg-surface-elevated); border-radius: var(--radius-full); overflow: hidden;">
-              <div style="height: 100%; width: {{ factor.percent * 2 }}%; background: var(--grad-primary); border-radius: var(--radius-full);"></div>
-            </div>
+        {% if factor.percent > 0 %}
+        <div style="padding: 0.85rem 1rem; background-color: var(--bg-secondary); border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+          <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.875rem; font-weight: 600; margin-bottom: 0.4rem;">
+            <span style="color: var(--text-primary);">{{ factor.label }}: {{ factor.value }}</span>
+            <span style="color: var(--accent-primary); font-family: var(--font-mono);">+{{ factor.percent }}% Weight</span>
           </div>
-          {% endif %}
+          <div style="width: 100%; height: 6px; background-color: var(--border-color); border-radius: var(--radius-full); overflow: hidden;">
+            <div style="height: 100%; width: {{ factor.percent * 2 }}%; background-color: var(--accent-primary); border-radius: var(--radius-full);"></div>
+          </div>
+        </div>
+        {% endif %}
         {% endfor %}
       </div>
     </div>
 
-    <!-- Clinical Metrics Table -->
-    <div class="panel" style="margin-bottom: 2rem;">
-      <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary); margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem;">
-        <i class="fas fa-table" style="color: var(--neon-cyan);"></i>
-        Comparative Reference Range Table
+    <!-- Comparative Clinical Reference Table -->
+    <div style="margin-bottom: 2rem;">
+      <h3 class="card-title" style="margin-bottom: 1rem;">
+        <i class="fas fa-table" style="color: var(--accent-primary);"></i>
+        Clinical Laboratory Reference Ranges
       </h3>
 
-      <div class="analytics-table-wrap">
-        <table class="cyber-table">
+      <div class="table-container">
+        <table class="table">
           <thead>
             <tr>
-              <th>Biomarker / Indicator</th>
+              <th>Biomarker</th>
               <th>Patient Measurement</th>
-              <th>Normal Clinical Range</th>
-              <th>Status Stratification</th>
+              <th>Normal Reference Range</th>
+              <th>Clinical Status</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td><strong>Fasting Glucose</strong></td>
-              <td>{{ glucose }} mg/dL</td>
+              <td><span style="font-family: var(--font-mono);">{{ glucose }} mg/dL</span></td>
               <td>70 – 99 mg/dL</td>
               <td>
                 {% if glucose > 125 %}
-                  <span style="color: var(--status-high); font-weight: 700;"><i class="fas fa-circle-exclamation"></i> Elevated</span>
+                <span class="badge badge-high"><i class="fas fa-circle-exclamation"></i> Elevated</span>
                 {% elif glucose > 99 %}
-                  <span style="color: var(--status-mod); font-weight: 700;"><i class="fas fa-triangle-exclamation"></i> Pre-Diabetic</span>
+                <span class="badge badge-moderate"><i class="fas fa-triangle-exclamation"></i> Prediabetes</span>
                 {% else %}
-                  <span style="color: var(--status-low); font-weight: 700;"><i class="fas fa-circle-check"></i> Normal</span>
+                <span class="badge badge-low"><i class="fas fa-circle-check"></i> Normal</span>
                 {% endif %}
               </td>
             </tr>
             <tr>
               <td><strong>Body Mass Index (BMI)</strong></td>
-              <td>{{ bmi }} kg/m²</td>
+              <td><span style="font-family: var(--font-mono);">{{ bmi }} kg/m²</span></td>
               <td>18.5 – 24.9 kg/m²</td>
               <td>
                 {% if bmi >= 30 %}
-                  <span style="color: var(--status-high); font-weight: 700;"><i class="fas fa-circle-exclamation"></i> Obese</span>
+                <span class="badge badge-high"><i class="fas fa-circle-exclamation"></i> Obese</span>
                 {% elif bmi >= 25 %}
-                  <span style="color: var(--status-mod); font-weight: 700;"><i class="fas fa-triangle-exclamation"></i> Overweight</span>
+                <span class="badge badge-moderate"><i class="fas fa-triangle-exclamation"></i> Overweight</span>
                 {% else %}
-                  <span style="color: var(--status-low); font-weight: 700;"><i class="fas fa-circle-check"></i> Normal</span>
+                <span class="badge badge-low"><i class="fas fa-circle-check"></i> Optimal</span>
                 {% endif %}
               </td>
             </tr>
             <tr>
-              <td><strong>Blood Pressure</strong></td>
-              <td>{{ bp_systolic }}/{{ bp_diastolic }} mmHg</td>
-              <td>90–120 / 60–80 mmHg</td>
+              <td><strong>Blood Pressure (Systolic)</strong></td>
+              <td><span style="font-family: var(--font-mono);">{{ bp_systolic }} mmHg</span></td>
+              <td>90 – 120 mmHg</td>
               <td>
-                {% if bp_systolic > 130 %}
-                  <span style="color: var(--status-mod); font-weight: 700;"><i class="fas fa-triangle-exclamation"></i> Elevated</span>
+                {% if bp_systolic >= 130 %}
+                <span class="badge badge-high"><i class="fas fa-circle-exclamation"></i> Hypertensive</span>
+                {% elif bp_systolic >= 120 %}
+                <span class="badge badge-moderate"><i class="fas fa-triangle-exclamation"></i> Elevated</span>
                 {% else %}
-                  <span style="color: var(--status-low); font-weight: 700;"><i class="fas fa-circle-check"></i> Normal</span>
+                <span class="badge badge-low"><i class="fas fa-circle-check"></i> Normal</span>
                 {% endif %}
-              </td>
-            </tr>
-            <tr>
-              <td><strong>Age</strong></td>
-              <td>{{ age|int }} years</td>
-              <td>Risk elevates at ≥ 45 yrs</td>
-              <td>
-                <span style="color: var(--status-low); font-weight: 700;"><i class="fas fa-circle-check"></i> Monitored</span>
               </td>
             </tr>
           </tbody>
@@ -184,29 +181,19 @@
       </div>
     </div>
 
-    <!-- Lifestyle Radar Chart (If Present) -->
-    {% if has_lifestyle_data %}
-    <div class="panel" style="margin-bottom: 2rem;">
-      <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary); margin-bottom: 1.25rem; text-align: center;">
-        Lifestyle Profile Radar
-      </h3>
-      <div style="height: 280px; position: relative;">
-        <canvas id="lifestyleRadarCanvas"></canvas>
+    <!-- Navigation Actions -->
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color);">
+      <a href="{{ url_for('results') }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Return to Triage Summary
+      </a>
+      <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+        <a href="{{ url_for('download_report') }}" class="btn btn-outline">
+          <i class="fas fa-file-pdf"></i> Download Official PDF
+        </a>
+        <a href="{{ url_for('reset') }}" class="btn btn-primary">
+          <i class="fas fa-plus"></i> New Assessment
+        </a>
       </div>
-    </div>
-    {% endif %}
-
-    <!-- Centered Action Buttons (Matching Reference Design) -->
-    <div style="display: flex; gap: 1rem; justify-content: center; align-items: center; flex-wrap: wrap; margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-light);">
-      <a href="{{ url_for('download_report') }}" class="btn btn-primary btn-lg" style="background: #10b981; border-color: #10b981; box-shadow: 0 0 25px rgba(16, 185, 129, 0.4);">
-        <i class="fas fa-file-pdf"></i> Download PDF Report
-      </a>
-      <a href="{{ url_for('results') }}" class="btn btn-secondary btn-lg">
-        <i class="fas fa-arrow-left"></i> Back to Prediction Result
-      </a>
-      <a href="{{ url_for('assessment') }}" class="btn btn-outline btn-lg">
-        <i class="fas fa-rotate-left"></i> New Assessment
-      </a>
     </div>
   </div>
 </div>
@@ -214,14 +201,18 @@
 
 {% block scripts %}
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // 1. Arch Semicircular Gauge (Matching assets/detailed-result.png)
-    (function drawArchGauge() {
+  document.addEventListener('DOMContentLoaded', function () {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const textColor = isDark ? '#94A3B8' : '#64748B';
+    const gridColor = isDark ? '#293548' : '#E2E8F0';
+
+    // 1. Semicircular Arch Gauge
+    (function () {
       const canvas = document.getElementById('archGaugeCanvas');
       if (!canvas) return;
       const ctx = canvas.getContext('2d');
-      const prob = {{ probability }};
-      const color = '{{ color }}';
+      const score = {{ probability | default(0) }};
+      const riskColor = '{{ color }}';
 
       const dpr = window.devicePixelRatio || 1;
       canvas.width = 240 * dpr;
@@ -233,56 +224,50 @@
       const cx = 120;
       const cy = 135;
       const radius = 95;
-      const lineWidth = 22;
+      const lineWidth = 16;
+      const startAngle = Math.PI;
+      const endAngle = 2 * Math.PI;
 
       ctx.clearRect(0, 0, 240, 160);
 
-      // Background Semicircle
+      // Background Arc
       ctx.beginPath();
-      ctx.arc(cx, cy, radius, Math.PI, 2 * Math.PI, false);
-      ctx.strokeStyle = document.documentElement.getAttribute('data-theme') === 'light' ? '#e2e8f0' : 'rgba(255, 255, 255, 0.08)';
+      ctx.arc(cx, cy, radius, startAngle, endAngle);
+      ctx.strokeStyle = isDark ? '#1E293B' : '#E2E8F0';
       ctx.lineWidth = lineWidth;
       ctx.lineCap = 'round';
       ctx.stroke();
 
       // Active Arc
-      const endAngle = Math.PI + (prob / 100) * Math.PI;
+      const progress = Math.min(100, Math.max(0, score)) / 100;
+      const activeEnd = startAngle + (Math.PI * progress);
+
       ctx.beginPath();
-      ctx.arc(cx, cy, radius, Math.PI, endAngle, false);
-      ctx.strokeStyle = color;
+      ctx.arc(cx, cy, radius, startAngle, activeEnd);
+      ctx.strokeStyle = riskColor;
       ctx.lineWidth = lineWidth;
       ctx.lineCap = 'round';
-      ctx.shadowColor = color;
-      ctx.shadowBlur = 15;
       ctx.stroke();
-      ctx.shadowBlur = 0;
     })();
 
-    // 2. Feature Comparison Chart (Bar Chart comparing Patient Values vs Standard Normal Thresholds)
-    (function drawComparisonChart() {
-      const canvas = document.getElementById('featureComparisonChart');
-      if (!canvas) return;
-      const ctx = canvas.getContext('2d');
-
-      const isLight = document.documentElement.getAttribute('data-theme') === 'light';
-      const textColor = isLight ? '#475569' : '#cbd5e1';
-      const gridColor = isLight ? 'rgba(0, 0, 0, 0.06)' : 'rgba(255, 255, 255, 0.06)';
-
-      new Chart(ctx, {
+    // 2. Feature Comparison Chart (Patient vs Normal Reference)
+    const compCanvas = document.getElementById('featureComparisonChart');
+    if (compCanvas) {
+      new Chart(compCanvas.getContext('2d'), {
         type: 'bar',
         data: {
-          labels: ['Glucose (mg/dL)', 'BMI (kg/m²)', 'Systolic BP', 'Age (yrs)'],
+          labels: ['Glucose (mg/dL)', 'BMI (kg/m²)', 'Systolic BP (mmHg)'],
           datasets: [
             {
-              label: 'Patient Values',
-              data: [{{ glucose }}, {{ bmi }}, {{ bp_systolic }}, {{ age|int }}],
-              backgroundColor: '#00f2fe',
+              label: 'Patient',
+              data: [{{ glucose|default(100) }}, {{ bmi|default(25) }}, {{ bp_systolic|default(120) }}],
+              backgroundColor: isDark ? '#3B82F6' : '#2563EB',
               borderRadius: 6
             },
             {
-              label: 'Normal Threshold',
-              data: [99, 24.9, 120, 45],
-              backgroundColor: '#8b5cf6',
+              label: 'Clinical Normal',
+              data: [90, 22.5, 115],
+              backgroundColor: isDark ? '#334155' : '#CBD5E1',
               borderRadius: 6
             }
           ]
@@ -295,83 +280,23 @@
               position: 'top',
               labels: {
                 color: textColor,
-                font: { family: 'Plus Jakarta Sans', weight: '600', size: 11 }
+                font: { family: 'Inter', size: 11, weight: '500' }
               }
             }
           },
           scales: {
             x: {
               grid: { display: false },
-              ticks: { color: textColor, font: { family: 'Plus Jakarta Sans', size: 11 } }
+              ticks: { color: textColor, font: { family: 'Inter' } }
             },
             y: {
               grid: { color: gridColor },
-              ticks: { color: textColor, font: { family: 'Plus Jakarta Sans' } }
+              ticks: { color: textColor, font: { family: 'Inter' } }
             }
           }
         }
       });
-    })();
-
-    // 3. Lifestyle Radar Chart (if present)
-    {% if has_lifestyle_data %}
-    (function drawRadar() {
-      const canvas = document.getElementById('lifestyleRadarCanvas');
-      if (!canvas) return;
-      const ctx = canvas.getContext('2d');
-
-      const labels = ['Activity', 'Diet Quality', 'Sleep Score', 'Stress Mgmt', 'Tobacco Free', 'Alcohol Mod'];
-      const values = [
-        Math.min(10, ({{ lifestyle.activity if lifestyle.activity else 0 }}) / 15),
-        {{ lifestyle.diet if lifestyle.diet else 5 }},
-        Math.min(10, ({{ lifestyle.sleep if lifestyle.sleep else 7 }}) * 1.2),
-        Math.max(0, 10 - ({{ lifestyle.stress if lifestyle.stress else 5 }})),
-        {% if lifestyle.smoking == 'Never' %}10{% elif lifestyle.smoking == 'Former' %}5{% else %}1{% endif %},
-        {% if lifestyle.alcohol == 'None' %}10{% elif lifestyle.alcohol == 'Occasional' %}6{% else %}2{% endif %}
-      ];
-
-      const isLight = document.documentElement.getAttribute('data-theme') === 'light';
-      const gridColor = isLight ? 'rgba(0, 0, 0, 0.08)' : 'rgba(255, 255, 255, 0.1)';
-      const textColor = isLight ? '#475569' : '#94a3b8';
-
-      new Chart(ctx, {
-        type: 'radar',
-        data: {
-          labels: labels,
-          datasets: [{
-            label: 'Patient Lifestyle Matrix',
-            data: values,
-            borderColor: '#00f2fe',
-            backgroundColor: 'rgba(0, 242, 254, 0.2)',
-            pointBackgroundColor: '#00f2fe',
-            pointBorderColor: '#ffffff',
-            borderWidth: 2,
-            pointRadius: 4
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            r: {
-              min: 0,
-              max: 10,
-              ticks: { display: false, stepSize: 2 },
-              grid: { color: gridColor },
-              angleLines: { color: gridColor },
-              pointLabels: {
-                color: textColor,
-                font: { family: 'Plus Jakarta Sans', size: 11, weight: '600' }
-              }
-            }
-          },
-          plugins: {
-            legend: { display: false }
-          }
-        }
-      });
-    })();
-    {% endif %}
+    }
   });
 </script>
 {% endblock %}

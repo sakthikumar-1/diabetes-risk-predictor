@@ -1,268 +1,176 @@
 {% extends "base.html" %}
 
-{% block title %}Clinical Assessment Results – GlucoShield{% endblock %}
+{% block title %}Clinical Assessment Results – GlucoShield Clinical AI{% endblock %}
 
 {% block content %}
-<div class="results-container">
-  <div class="card" style="padding: 2.5rem;">
-    <!-- Report Top Header Banner -->
-    <div class="report-header-banner">
-      <div class="patient-identity-block">
-        <div class="patient-avatar-badge">
+<div style="max-width: 1040px; margin: 0 auto;">
+  <!-- Results Main Card -->
+  <div class="card" style="padding: 2.25rem;">
+    <!-- Patient Header Banner -->
+    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); margin-bottom: 2rem;">
+      <div style="display: flex; align-items: center; gap: 1rem;">
+        <div style="width: 48px; height: 48px; border-radius: var(--radius-md); background-color: var(--accent-primary-subtle); color: var(--accent-primary); display: flex; align-items: center; justify-content: center; font-size: 1.25rem; font-weight: 700;">
           {{ patient.name[0]|upper if patient.name else 'P' }}
         </div>
-        <div class="patient-info-meta">
-          <div class="eyebrow" style="margin-bottom: 0.25rem;">
-            <i class="fas fa-file-medical"></i> Clinical Diagnostic Report
+        <div>
+          <div class="hero-kicker" style="margin-bottom: 0.25rem; font-size: 0.75rem;">
+            <i class="fas fa-file-medical"></i> Diagnostic Triage Summary
           </div>
-          <h2>{{ patient.name if patient.name else 'Patient' }}</h2>
-          <p>
+          <h1 style="font-size: 1.6rem; font-weight: 700; color: var(--text-primary); margin: 0;">
+            {{ patient.name if patient.name else 'Patient Record' }}
+          </h1>
+          <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.2rem;">
             <span>{{ patient.age|int }} years old</span> ·
             <span>{{ patient.gender }}</span> ·
-            <span style="color: var(--text-muted);"><i class="fas fa-calendar-check"></i> {{ date }}</span>
+            <span><i class="fas fa-calendar-alt"></i> {{ date }}</span>
           </p>
         </div>
       </div>
 
       <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
-        <a href="{{ url_for('download_report') }}" class="btn btn-secondary btn-sm"
-          title="Download Official PDF Report">
+        <a href="{{ url_for('download_report') }}" class="btn btn-secondary btn-sm" title="Download PDF Report">
           <i class="fas fa-file-pdf"></i> Download PDF
         </a>
-        <button onclick="window.print()" class="btn btn-outline btn-sm" title="Print Report">
+        <a href="{{ url_for('analytics') }}" class="btn btn-outline btn-sm" title="Deep Visual Analytics">
+          <i class="fas fa-chart-pie"></i> Visual Analytics
+        </a>
+        <button onclick="window.print()" class="btn btn-secondary btn-sm" title="Print Report">
           <i class="fas fa-print"></i> Print
         </button>
       </div>
     </div>
 
-    <!-- Big Clinical Risk Showcase Card -->
-    <div class="risk-showcase-panel">
-      <!-- High-Precision Dynamic Gauge -->
-      <div class="risk-gauge-canvas-box">
+    <!-- Clinical Risk Showcase Header -->
+    <div class="results-header-card">
+      <div class="gauge-wrapper">
         <canvas id="riskGaugeCanvas" width="220" height="220"></canvas>
       </div>
 
-      <!-- Risk Score Details & Narrative -->
-      <div class="risk-details-content">
+      <div>
         <div style="display: flex; align-items: baseline; gap: 0.75rem;">
-          <div class="risk-score-jumbo" style="color: {{ color }};">
+          <div style="font-size: 3rem; font-weight: 800; color: {{ color }}; font-family: var(--font-mono); line-height: 1;">
             {{ probability }}%
           </div>
-          <span
-            style="color: var(--text-muted); font-weight: 700; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 0.05em;">
-            Risk Probability
+          <span style="font-size: 0.875rem; font-weight: 600; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 0.05em;">
+            Estimated Risk
           </span>
         </div>
 
-        <div>
+        <div style="margin: 0.75rem 0;">
           {% if risk_level == 'low' %}
-          <span class="risk-triage-badge-lg"
-            style="background: var(--risk-low-bg); color: var(--risk-low-text); border: 1.5px solid var(--risk-low-border);">
+          <span class="badge badge-low" style="font-size: 0.95rem; padding: 0.4rem 1rem;">
             <i class="fas fa-circle-check"></i> {{ result_text }}
           </span>
           {% elif risk_level == 'moderate' %}
-          <span class="risk-triage-badge-lg"
-            style="background: var(--risk-mod-bg); color: var(--risk-mod-text); border: 1.5px solid var(--risk-mod-border);">
+          <span class="badge badge-moderate" style="font-size: 0.95rem; padding: 0.4rem 1rem;">
             <i class="fas fa-triangle-exclamation"></i> {{ result_text }}
           </span>
           {% else %}
-          <span class="risk-triage-badge-lg"
-            style="background: var(--risk-high-bg); color: var(--risk-high-text); border: 1.5px solid var(--risk-high-border);">
+          <span class="badge badge-high" style="font-size: 0.95rem; padding: 0.4rem 1rem;">
             <i class="fas fa-circle-exclamation"></i> {{ result_text }}
           </span>
           {% endif %}
         </div>
 
-        <p class="risk-narrative-copy">
+        <p style="font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6;">
           {% if risk_level == 'low' %}
-          The patient's clinical markers and metabolic profile are within optimal thresholds. Continuation of routine
-          preventative wellness and annual screening is advised.
+          The patient's clinical markers and metabolic profile are within optimal thresholds. Continuation of routine preventative wellness and annual screening is advised.
           {% elif risk_level == 'moderate' %}
-          Elevated indicators suggest a pre-diabetic state or emerging metabolic resistance. Active lifestyle
-          intervention and follow-up glycemic monitoring in 3 months are recommended.
+          Elevated indicators suggest a pre-diabetic state or emerging insulin resistance. Active lifestyle intervention and follow-up glycemic monitoring in 3 months are recommended.
           {% else %}
-          Multiple high-impact clinical risk factors detected. Findings strongly indicate elevated diabetes probability.
-          Immediate physician evaluation and confirmatory diagnostic testing (HbA1c / FPG) are strongly urged.
+          Multiple high-impact clinical risk factors detected. Findings strongly indicate elevated diabetes probability. Immediate physician evaluation and confirmatory diagnostic testing (HbA1c / FPG) are strongly urged.
           {% endif %}
         </p>
       </div>
     </div>
 
-    <!-- Patient Vitals & Health Snapshot -->
+    <!-- Biomarkers Snapshot Grid -->
     <div style="margin-bottom: 2rem;">
-      <h3 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-main);">
-        <i class="fas fa-heart-pulse" style="color: var(--primary); margin-right: 0.35rem;"></i>
-        Clinical Biometrics Snapshot
+      <h3 class="card-title" style="margin-bottom: 1rem;">
+        <i class="fas fa-heart-pulse" style="color: var(--accent-primary);"></i> Clinical Biomarkers Snapshot
       </h3>
 
-      <div class="vitals-snapshot-grid">
-        <div class="vital-metric-card">
-          <span class="vital-label">Fasting Glucose</span>
-          <div class="vital-val">{{ glucose }} <small
-              style="font-size: 0.75rem; font-weight: 500; color: var(--text-muted);">mg/dL</small></div>
-          <span class="status-badge-sm {% if glucose > 125 %}alert{% elif glucose > 99 %}warn{% else %}ok{% endif %}"
-            style="margin-top: 0.5rem;">
-            {% if glucose > 125 %}Elevated{% elif glucose > 99 %}Pre-diabetic{% else %}Normal{% endif %}
+      <div class="biomarkers-grid">
+        <div class="biomarker-tile">
+          <span class="title">Fasting Glucose</span>
+          <div class="value">{{ glucose }} <small style="font-size: 0.75rem; font-weight: 400; color: var(--text-secondary);">mg/dL</small></div>
+          <span class="range">Target: 70–99 mg/dL</span>
+          <span class="badge {% if glucose > 125 %}badge-high{% elif glucose > 99 %}badge-moderate{% else %}badge-low{% endif %}" style="margin-top: 0.4rem; width: fit-content;">
+            {% if glucose > 125 %}Elevated{% elif glucose > 99 %}Prediabetes{% else %}Normal{% endif %}
           </span>
         </div>
 
-        <div class="vital-metric-card">
-          <span class="vital-label">Body Mass Index</span>
-          <div class="vital-val">{{ bmi }} <small
-              style="font-size: 0.75rem; font-weight: 500; color: var(--text-muted);">kg/m²</small></div>
-          <span class="status-badge-sm {% if bmi >= 30 %}alert{% elif bmi >= 25 %}warn{% else %}ok{% endif %}"
-            style="margin-top: 0.5rem;">
+        <div class="biomarker-tile">
+          <span class="title">Body Mass Index</span>
+          <div class="value">{{ bmi }} <small style="font-size: 0.75rem; font-weight: 400; color: var(--text-secondary);">kg/m²</small></div>
+          <span class="range">Target: 18.5–24.9</span>
+          <span class="badge {% if bmi >= 30 %}badge-high{% elif bmi >= 25 %}badge-moderate{% else %}badge-low{% endif %}" style="margin-top: 0.4rem; width: fit-content;">
             {% if bmi >= 30 %}Obese{% elif bmi >= 25 %}Overweight{% else %}Optimal{% endif %}
           </span>
         </div>
 
-        <div class="vital-metric-card">
-          <span class="vital-label">Blood Pressure</span>
-          <div class="vital-val">{{ bp_systolic }}/{{ bp_diastolic }} <small
-              style="font-size: 0.75rem; font-weight: 500; color: var(--text-muted);">mmHg</small></div>
-          <span class="status-badge-sm {% if bp_systolic > 130 %}warn{% else %}ok{% endif %}"
-            style="margin-top: 0.5rem;">
-            {% if bp_systolic > 130 %}Elevated{% else %}Normal{% endif %}
+        <div class="biomarker-tile">
+          <span class="title">Blood Pressure</span>
+          <div class="value">{{ bp_systolic }}/{{ bp_diastolic }} <small style="font-size: 0.75rem; font-weight: 400; color: var(--text-secondary);">mmHg</small></div>
+          <span class="range">Target: <120 / <80</span>
+          <span class="badge {% if bp_systolic >= 130 %}badge-high{% elif bp_systolic >= 120 %}badge-moderate{% else %}badge-low{% endif %}" style="margin-top: 0.4rem; width: fit-content;">
+            {% if bp_systolic >= 130 %}Hypertensive{% elif bp_systolic >= 120 %}Elevated{% else %}Normal{% endif %}
           </span>
         </div>
 
-        <div class="vital-metric-card">
-          <span class="vital-label">Patient Age</span>
-          <div class="vital-val">{{ age|int }} <small
-              style="font-size: 0.75rem; font-weight: 500; color: var(--text-muted);">years</small></div>
-          <span class="status-badge-sm ok" style="margin-top: 0.5rem;">
+        <div class="biomarker-tile">
+          <span class="title">Patient Age</span>
+          <div class="value">{{ age|int }} <small style="font-size: 0.75rem; font-weight: 400; color: var(--text-secondary);">years</small></div>
+          <span class="range">Screening Baseline</span>
+          <span class="badge badge-muted" style="margin-top: 0.4rem; width: fit-content;">
             Recorded
           </span>
         </div>
-
-        {% if activity_score is defined and activity_score > 0 %}
-        <div class="vital-metric-card">
-          <span class="vital-label">Physical Activity</span>
-          <div class="vital-val">{{ activity_score }}/10</div>
-          <span class="status-badge-sm {% if activity_score < 5 %}warn{% else %}ok{% endif %}"
-            style="margin-top: 0.5rem;">
-            {% if activity_score < 5 %}Low Activity{% else %}Active{% endif %} </span>
-        </div>
-        {% endif %}
-
-        {% if patient.family_history == 'Yes' %}
-        <div class="vital-metric-card">
-          <span class="vital-label">Family Pedigree</span>
-          <div class="vital-val" style="color: var(--risk-mod); font-size: 1.25rem;">Positive</div>
-          <span class="status-badge-sm warn" style="margin-top: 0.5rem;">
-            1st Degree
-          </span>
-        </div>
-        {% endif %}
-
-        {% if patient.smoking is defined and patient.smoking != 'Never' %}
-        <div class="vital-metric-card">
-          <span class="vital-label">Smoking Status</span>
-          <div class="vital-val" style="font-size: 1.25rem;">{{ patient.smoking }}</div>
-          <span class="status-badge-sm {% if patient.smoking == 'Current' %}alert{% else %}warn{% endif %}"
-            style="margin-top: 0.5rem;">
-            Risk Factor
-          </span>
-        </div>
-        {% endif %}
       </div>
     </div>
 
-    <!-- Stratified Recommendations Section -->
-    <div class="recommendations-wrapper">
-      <div class="recommendations-header">
-        <i class="fas fa-clipboard-list" style="color: var(--primary);"></i>
-        <span>Evidence-Based Clinical Follow-Up Guidance</span>
-      </div>
+    <!-- Recommendations Section -->
+    <div style="margin-bottom: 2rem;">
+      <h3 class="card-title" style="margin-bottom: 1rem;">
+        <i class="fas fa-list-check" style="color: var(--accent-primary);"></i> Evidence-Based Recommendations
+      </h3>
 
-      <div class="priority-columns">
-        <!-- High Priority Column -->
-        <div class="priority-column-card high">
-          <div class="priority-header high">
-            <i class="fas fa-triangle-exclamation"></i> High Priority Actions
-          </div>
-          {% set high_recs = [] %}
-          {% for item in recommendations %}
-          {% if item.priority == 'high' %}
-          {% set _ = high_recs.append(item) %}
-          <div class="rec-item high">
-            <i class="fas fa-circle-exclamation"></i>
-            <div>
-              <strong>{{ item.text }}</strong>
-              <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem;">
-                Requires prompt clinical follow-up within 1–2 weeks.
-              </div>
-            </div>
-          </div>
-          {% endif %}
-          {% endfor %}
-          {% if high_recs|length == 0 %}
-          <div style="color: var(--text-muted); font-size: 0.875rem; font-style: italic; padding: 0.5rem 0;">
-            No urgent high-priority alerts identified.
-          </div>
-          {% endif %}
+      <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+        {% for rec in recommendations %}
+        <div style="display: flex; align-items: flex-start; gap: 1rem; padding: 1rem; background-color: var(--bg-secondary); border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+          <span class="badge {% if rec.priority == 'high' %}badge-high{% elif rec.priority == 'medium' %}badge-moderate{% else %}badge-low{% endif %}" style="margin-top: 0.15rem;">
+            {{ rec.priority|upper }}
+          </span>
+          <span style="font-size: 0.925rem; color: var(--text-primary); line-height: 1.5;">
+            {{ rec.text }}
+          </span>
         </div>
-
-        <!-- Medium Priority Column -->
-        <div class="priority-column-card medium">
-          <div class="priority-header medium">
-            <i class="fas fa-clock"></i> Medium Priority Actions
-          </div>
-          {% set med_recs = [] %}
-          {% for item in recommendations %}
-          {% if item.priority == 'medium' %}
-          {% set _ = med_recs.append(item) %}
-          <div class="rec-item medium">
-            <i class="fas fa-arrow-trend-up"></i>
-            <div>
-              <strong>{{ item.text }}</strong>
-              <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem;">
-                Implement targeted lifestyle adaptations and follow up in 3 months.
-              </div>
-            </div>
-          </div>
-          {% endif %}
-          {% endfor %}
-          {% if med_recs|length == 0 %}
-          <div style="color: var(--text-muted); font-size: 0.875rem; font-style: italic; padding: 0.5rem 0;">
-            No intermediate action items noted.
-          </div>
-          {% endif %}
-        </div>
-
-        <!-- Low Priority Column -->
-        <div class="priority-column-card low">
-          <div class="priority-header low">
-            <i class="fas fa-check-double"></i> Preventative Maintenance
-          </div>
-          {% for item in recommendations %}
-          {% if item.priority == 'low' %}
-          <div class="rec-item low">
-            <i class="fas fa-circle-check"></i>
-            <div>
-              <strong>{{ item.text }}</strong>
-              <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem;">
-                Sustain balanced nutrition, routine exercise, and annual screening.
-              </div>
-            </div>
-          </div>
-          {% endif %}
-          {% endfor %}
-        </div>
+        {% endfor %}
       </div>
     </div>
 
-    <!-- Bottom Actions Row -->
-    <div class="results-action-row">
-      <a href="{{ url_for('analytics') }}" class="btn btn-primary btn-lg">
-        <i class="fas fa-chart-line"></i> View Detailed Clinical Analytics
+    <!-- Medical Disclaimer -->
+    <div class="disclaimer-card">
+      <i class="fas fa-circle-info"></i>
+      <div>
+        <strong style="color: var(--text-primary);">Clinical Disclaimer:</strong>
+        This assessment is computed via statistical machine learning models for clinical decision support and patient triage screening. It does not constitute a definitive medical diagnosis. Confirmatory venous blood testing (HbA1c / Oral Glucose Tolerance Test) by a licensed healthcare provider is required for medical determination.
+      </div>
+    </div>
+
+    <!-- Bottom Actions -->
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color);">
+      <a href="{{ url_for('reset') }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Start New Assessment
       </a>
-      <a href="{{ url_for('download_report') }}" class="btn btn-secondary btn-lg">
-        <i class="fas fa-download"></i> Download Full PDF Report
-      </a>
-      <a href="{{ url_for('assessment') }}" class="btn btn-outline btn-lg">
-        <i class="fas fa-rotate-left"></i> New Assessment
-      </a>
+      <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+        <a href="{{ url_for('analytics') }}" class="btn btn-outline">
+          <i class="fas fa-chart-line"></i> Deep Visual Analytics
+        </a>
+        <a href="{{ url_for('download_report') }}" class="btn btn-primary">
+          <i class="fas fa-file-pdf"></i> Download PDF Report
+        </a>
+      </div>
     </div>
   </div>
 </div>
@@ -276,56 +184,58 @@
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     const probability = {{ probability | default(0) }};
-  const riskColor = '{{ color }}';
+    const riskColor = '{{ color }}';
 
-  // Account for high DPI screens
-  const dpr = window.devicePixelRatio || 1;
-  canvas.width = 220 * dpr;
-  canvas.height = 220 * dpr;
-  canvas.style.width = '220px';
-  canvas.style.height = '220px';
-  ctx.scale(dpr, dpr);
+    // Account for high DPI screens
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = 220 * dpr;
+    canvas.height = 220 * dpr;
+    canvas.style.width = '220px';
+    canvas.style.height = '220px';
+    ctx.scale(dpr, dpr);
 
-  const cx = 110;
-  const cy = 110;
-  const radius = 86;
-  const lineWidth = 16;
-  const startAngle = 0.75 * Math.PI;
-  const totalAngle = 1.5 * Math.PI;
-  const endAngle = startAngle + totalAngle;
+    const cx = 110;
+    const cy = 110;
+    const radius = 86;
+    const lineWidth = 14;
+    const startAngle = 0.75 * Math.PI;
+    const totalAngle = 1.5 * Math.PI;
+    const endAngle = startAngle + totalAngle;
 
-  ctx.clearRect(0, 0, 220, 220);
+    ctx.clearRect(0, 0, 220, 220);
 
-  // 1. Background Arc (Track)
-  ctx.beginPath();
-  ctx.arc(cx, cy, radius, startAngle, endAngle);
-  ctx.strokeStyle = document.documentElement.classList.contains('dark') ? 'rgba(255, 255, 255, 0.08)' : '#e2e8f0';
-  ctx.lineWidth = lineWidth;
-  ctx.lineCap = 'round';
-  ctx.stroke();
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const trackColor = isDark ? '#1E293B' : '#E2E8F0';
 
-  // 2. Active Risk Progress Arc
-  const progressAngle = startAngle + (probability / 100) * totalAngle;
-  ctx.beginPath();
-  ctx.arc(cx, cy, radius, startAngle, progressAngle);
-  ctx.strokeStyle = riskColor;
-  ctx.lineWidth = lineWidth;
-  ctx.lineCap = 'round';
-  ctx.shadowColor = riskColor;
-  ctx.shadowBlur = 12;
-  ctx.stroke();
-  ctx.shadowBlur = 0;
+    // 1. Background Arc (Track)
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, startAngle, endAngle);
+    ctx.strokeStyle = trackColor;
+    ctx.lineWidth = lineWidth;
+    ctx.lineCap = 'round';
+    ctx.stroke();
 
-  // 3. Center Value Display
-  ctx.font = '800 36px "Plus Jakarta Sans", sans-serif';
-  ctx.fillStyle = riskColor;
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText(Math.round(probability) + '%', cx, cy - 6);
+    // 2. Active Risk Arc
+    const progress = Math.min(100, Math.max(0, probability)) / 100;
+    const activeEnd = startAngle + (totalAngle * progress);
 
-  ctx.font = '700 11px "Plus Jakarta Sans", sans-serif';
-  ctx.fillStyle = document.documentElement.classList.contains('dark') ? '#94a3b8' : '#64748b';
-  ctx.fillText('DIABETES RISK', cx, cy + 22);
-  }) ();
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, startAngle, activeEnd);
+    ctx.strokeStyle = riskColor;
+    ctx.lineWidth = lineWidth;
+    ctx.lineCap = 'round';
+    ctx.stroke();
+
+    // 3. Center Text
+    ctx.fillStyle = riskColor;
+    ctx.font = '800 32px Inter, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(`${probability}%`, cx, cy - 8);
+
+    ctx.fillStyle = isDark ? '#94A3B8' : '#64748B';
+    ctx.font = '600 11px Inter, sans-serif';
+    ctx.fillText('RISK SCORE', cx, cy + 22);
+  })();
 </script>
 {% endblock %}
